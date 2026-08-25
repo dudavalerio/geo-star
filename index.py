@@ -16,4 +16,8 @@ class GeoStart:
 
     reta = Reta(a, b, c)
 
+    #𝑎𝑥+𝑏𝑦+𝑐
+    
+    eq_reta = ((reta.self.a) * x) + ((reta.self.b) * y) + reta.self.c
+    
     pyxel.run(self.draw)
