@@ -12,8 +12,8 @@ y2 = 5
 x3 = 5
 y3 = -2
 #Apelido plt
-plt.scatter(x1,y1, marker='*')
-plt.scatter(x2,y2,marker='*')
-plt.scatter(x3,y3)
+plt.scatter(x1,y1, marker='*', s=100)
+plt.scatter(x2,y2,marker='*', s=100)
+plt.scatter(x3,y3, marker='*', s=100)
 plt.show()
 
