@@ -17,5 +17,3 @@ plt.scatter(x2,y2,marker='*')
 plt.scatter(x3,y3)
 plt.show()
 
-
-teste = 2
