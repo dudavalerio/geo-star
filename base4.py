@@ -16,4 +16,5 @@ plt.scatter(x1,y1, marker='*', s=100)
 plt.scatter(x2,y2,marker='*', s=100)
 plt.scatter(x3,y3, marker='*', s=100)
 plt.show()
+nome ='Ismael'
 
