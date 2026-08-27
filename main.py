@@ -18,8 +18,8 @@ class Jogo:
         pass
 
     def draw(self):
-        pyxel.text(100, 100,'GeoStar', 7)
-        pyxel.text(100, 110, 'Desafio das Retas', 7)
+        pyxel.text(100, 100,'GeoStar', 7)#Depois tenho que apagar isso
+        pyxel.text(100, 110, 'Desafio das retas', 7)#Depois tenho que apagar isso
         for x in range(0, 401, 20):#Criar grade
             pyxel.line(x, 0, x, 300, 1)
         for y in range(0 , 301, 20):#Criar grade
