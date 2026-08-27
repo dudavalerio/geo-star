@@ -26,14 +26,12 @@ class Jogo:
             pyxel.line(0, y, 400, y, 1)
         pyxel.line(0, 150, 400, 150, 7)#Linha orizontal
         pyxel.line(200, 0, 200, 300, 7)#Linha vertical
-        estrela1.desenhar()
-        estrela2.desenhar()
-        estrela3.desenhar()
-        estrela4.desenhar()
-estrela1 = Estrela(1, -1)
-estrela2 = Estrela(3, 2)
-estrela3 = Estrela(-4, 3)
-estrela4 = Estrela(5, -2)
+        for estrela in  estrelas:
+            estrela.desenhar()
+estrelas = [Estrela(1, -1),
+        Estrela(3, 2),
+        Estrela(-4, 3),
+        Estrela(5, -2)]
 
 class Reta:
     def __init__(self,a, b):
