@@ -26,6 +26,7 @@ class Jogo:
             pyxel.line(0, y, 400, y, 1)
         pyxel.line(0, 150, 400, 150, 7)#Linha orizontal
         pyxel.line(200, 0, 200, 300, 7)#Linha vertical
+        reta1.desenhar()
         for estrela in  estrelas:
             estrela.desenhar()
 estrelas = [Estrela(1, -1),
@@ -40,6 +41,21 @@ class Reta:
         
     def calcular_y(self,x):
         return self.a * x + self.b#Uma função matemática transformado em código
+    def desenhar(self):
+        anterior_x = None
+        anterior_y = None
+
+        for x in range(-10, 11):
+            y = self.calcular_y(x)#Vai calcular o y pra cada x
+
+            tela_x = 200 + x * 20
+            tela_y = 150 - y * 20#matemático -> tela_y
+
+            if anterior_x is not None:
+                pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
+
+            anterior_x = tela_x
+            anterior_y = tela_y
 reta1 = Reta(2,1)
 print((reta1.calcular_y(3)))
 jogo = Jogo()
