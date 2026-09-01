@@ -41,9 +41,9 @@ class Reta:
         
     def calcular_y(self,x):
         return self.a * x + self.b#Uma função matemática transformado em código
-    def pass_por(self, estrela):
+    def passa_por(self, estrela):
         y_calculado = self.calcular_y(estrela.x)
-        return y_calculado  == calcular.y
+        return y_calculado  == estrela.y
     def desenhar(self):
         anterior_x = None
         anterior_y = None
@@ -60,7 +60,7 @@ class Reta:
             anterior_x = tela_x
             anterior_y = tela_y
 reta1 = Reta(2,1)
-print(reta1.pass_por(estrela[0]))0
+print(reta1.passa_por(estrelas[0]))
 jogo = Jogo()
 pyxel.init(400, 300, title='GeoStar\033') #Cria a configuração de janela.
 pyxel.run(jogo.update, jogo.draw)#Responsável pela lógica do jogo e responsável por desenhar na tela.
