@@ -71,7 +71,12 @@ class Jogo:
         for x in range(-7, 8):
             if x != 0:
                 tela_x = 250 + x * 20#Calculamos onde ele deve aparecer na tela
-                pyxel.text(tela_x, 174, str(x), 7)
+                pyxel.text(tela_x, 174, str(x), 12)
+        #Números do eixo y
+        for y in range(-6, 7):
+            if y != 0:
+                tela_y = 170 - y * 20#Calculamos onde ele deve aparecer na tela
+                pyxel.text(254, tela_y, str(y), 9)
         # Reta
         reta1.desenhar()
         # Estrelas
