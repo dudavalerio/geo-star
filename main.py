@@ -59,14 +59,19 @@ class Jogo:
         total_de_estrelas = self.contar_estrelas(estrelas)
         pyxel.text(10,20,f'Estrelas: {total_de_estrelas}/ {len(estrelas)}',7)
         # Grade
-        for x in range(0, 401, 20):
-            pyxel.line(x, 0, x, 300, 1)
+        for x in range(100, 401, 20):
+            pyxel.line(x, 40, x, 300, 1)
 
-        for y in range(0, 301, 20):
-            pyxel.line(0, y, 400, y, 1)
+        for y in range(40, 301, 20):
+            pyxel.line(100, y, 400, y, 1)
         # Eixos
         pyxel.line(100, 170, 400, 170, 7)
         pyxel.line(250, 40, 250, 300, 7)
+        #Números do eixo X
+        for x in range(-7, 8):
+            if x != 0:
+                tela_x = 250 + x * 20#Calculamos onde ele deve aparecer na tela
+                pyxel.text(tela_x, 174, str(x), 7)
         # Reta
         reta1.desenhar()
         # Estrelas
