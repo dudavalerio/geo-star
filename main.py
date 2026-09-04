@@ -58,12 +58,15 @@ class Jogo:
         #pyxel.text(10, 10, 'GeoStar', 7)
         total_de_estrelas = self.contar_estrelas(estrelas)
         pyxel.text(10,20,f'Estrelas: {total_de_estrelas}/ {len(estrelas)}',7)
-        # Grade
-        for x in range(100, 401, 20):
-            pyxel.line(x, 40, x, 300, 1)
-
-        for y in range(40, 301, 20):
-            pyxel.line(100, y, 400, y, 1)
+        #Os dois for, é pra converter grade em conversão matemático pra ficar alinhados com o grade no jg.
+        # Grade Vertical
+        for x in range(-7, 8):
+            tela_x = 250 + x * 20
+            pyxel.line(tela_x, 40, tela_x, 300, 1)
+        #Grade Horizontal
+        for y in range(-6, 7):
+            tela_y = 170 - y * 20
+            pyxel.line(100, tela_y, 400, tela_y, 1)
         # Eixos
         pyxel.line(100, 170, 400, 170, 7)
         pyxel.line(250, 40, 250, 300, 7)
@@ -72,6 +75,7 @@ class Jogo:
             if x != 0:
                 tela_x = 250 + x * 20#Calculamos onde ele deve aparecer na tela
                 pyxel.text(tela_x, 174, str(x), 12)
+        pyxel.text(245, 174, '0', 7)
         #Números do eixo y
         for y in range(-6, 7):
             if y != 0:
