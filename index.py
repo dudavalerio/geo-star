@@ -97,5 +97,5 @@ class Jogo:
             estrela.desenhar()
 print(reta1.passa_por(estrelas[0]))
 jogo = Jogo()
-pyxel.init(400, 300, title='GeoStar')
+pyxel.init(400, 300, title='GeoStar - Desafio da Reta')
 pyxel.run(jogo.update, jogo.draw)
