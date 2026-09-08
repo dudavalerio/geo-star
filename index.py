@@ -58,7 +58,14 @@ class Jogo:
             Estrela(-4, 3),
             Estrela(5, -2)
         ]
-        
+
+        def contar_estrelas(self, estrelas):
+                total_de_estrelas = 0
+                for estrela in estrelas:
+                    if estrela.coletada:
+                         total_de_estrelas += 1
+                return total_de_estrelas
+            
         pyxel.run(self.update, self.draw)
     
     def update(self):
@@ -120,6 +127,8 @@ class Jogo:
 
     def draw(self):
         pyxel.cls(0)
+
+        #total_de_estrelas = self.contar_estrelas(estrelas)
         
         # Desenha a Reta e as Estrelas
         self.reta1.desenhar()
