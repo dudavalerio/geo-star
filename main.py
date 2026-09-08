@@ -1,12 +1,12 @@
 import pyxel
 class Estrela:
     def __init__(self, x, y):
-        self.x = x
+        self.x = x#Atributo
         self.y = y
         self.coletada = False
     def desenhar(self):
         if not self.coletada:
-            tela_x, tela_y = self.converter_coordenada()
+            tela_x, tela_y = self.converter_coordenada()#Chamou a função
             pyxel.text(tela_x, tela_y, '*', 7)
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
@@ -22,7 +22,7 @@ class Reta:
     def passa_por(self, estrela):
         y_calculado = self.calcular_y(estrela.x)
         return y_calculado == estrela.y
-    #Vericar todas as estrelas quando encontrar ele coleta
+    #Vericar todas as estrelas quando encontrar ele coleta.
     def coletar_estrelas(self, estrelas):
         for estrela in estrelas:
             if self.passa_por(estrela):
