@@ -3,21 +3,18 @@ import pyxel
 
 class Estrela:
     def __init__(self, x, y):
-        self.x = x
+        self.x = x#Atributo
         self.y = y
-        self.coletada = False  # Nova flag para saber se o jogador já pegou esta estrela
-
+        self.coletada = False
     def desenhar(self):
-        if not self.coletada:  # Só desenha se não tiver sido coletada
-            tela_x, tela_y = self.converter_coordenada()
-            # Ajuste leve (-2) para centralizar o caractere '*' visualmente na linha
-            pyxel.text(tela_x - 2, tela_y - 2, '*', 10) # Cor 10 (Amarelo) fica ótimo!
-
+        if not self.coletada:
+            tela_x, tela_y = self.converter_coordenada()#Chamou a função
+            pyxel.text(tela_x, tela_y, '*', 7)
     def converter_coordenada(self):
-        tela_x = 200 + self.x * 20  # Centro x em 200
-        tela_y = 150 - self.y * 20  # Centro y em 150
+        tela_x = 250 + self.x * 20
+        tela_y = 170 - self.y * 20
         return tela_x, tela_y
-    
+
 class Reta:
     def __init__(self, a, b):
         self.a = a
@@ -116,23 +113,13 @@ class Jogo:
                 denominador = math.sqrt(self.reta1.a**2 + 1)
                 distancia = numerador / denominador
                 
-                # 2. Tolerância do raio (0.3 deixa o jogo mais justo e divertido)
+                # 2. Tolerância do raio (0.3)
                 if distancia <= 0.3:
                     estrela.coletada = True
                     print(f"⭐ Estrela na coordenada ({estrela.x}, {estrela.y}) capturada!")
 
     def draw(self):
         pyxel.cls(0)
-        
-        # Desenha a Grade Azul (1)
-        for x in range(0, 401, 20):
-            pyxel.line(x, 0, x, 300, 1)
-        for y in range(0, 301, 20):
-            pyxel.line(0, y, 400, y, 1)
-            
-        # Desenha os Eixos Principais Brancos (7)
-        pyxel.line(0, 150, 400, 150, 7) # Eixo X
-        pyxel.line(200, 0, 200, 300, 7) # Eixo Y
         
         # Desenha a Reta e as Estrelas
         self.reta1.desenhar()
@@ -163,6 +150,45 @@ class Jogo:
         pyxel.text(250, 280, f"Equacao: y = {self.reta1.a}x + {self.reta1.b}", 12)
         
         pyxel.mouse(True) #habilita o mouse em cima da janela
+        
+        # Desenha a Grade Azul (1)
+        #for x in range(0, 401, 20):
+        #    pyxel.line(x, 0, x, 300, 1)
+        #for y in range(0, 301, 20):
+        #    pyxel.line(0, y, 400, y, 1)
+            
+        # Desenha os Eixos Principais Brancos (7)
+        #pyxel.line(0, 150, 400, 150, 7) # Eixo X
+        #pyxel.line(200, 0, 200, 300, 7) # Eixo Y
+        
+         # Grade Vertical
+        for x in range(-7, 8):
+            tela_x = 250 + x * 20
+            pyxel.line(tela_x, 40, tela_x, 300, 1)
+            
+        #Grade Horizontal
+        for y in range(-6, 7):
+            tela_y = 170 - y * 20
+            pyxel.line(100, tela_y, 400, tela_y, 1)
+            
+        # Eixos
+        pyxel.line(100, 170, 400, 170, 7)
+        pyxel.line(250, 40, 250, 300, 7)
+        #Números do eixo X
+        for x in range(-7, 8):
+            if x != 0:
+                tela_x = 250 + x * 20#Calculamos onde ele deve aparecer na tela
+                pyxel.text(tela_x, 174, str(x), 12)
+        pyxel.text(245, 174, '0', 7)
+        #Números do eixo y
+        for y in range(-6, 7):
+            if y != 0:
+                tela_y = 170 - y * 20#Calculamos onde ele deve aparecer na tela
+                pyxel.text(254, tela_y, str(y), 9)
+
+        
+       
 
 # Inicializa o jogo diretamente
 Jogo()
+
