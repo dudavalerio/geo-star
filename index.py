@@ -1,5 +1,24 @@
+import os
+import sys
+import time
 import math
 import pyxel
+
+class telainicial:
+    def __init__(self):
+        self.inicial = "BEM VINDO AO GEO-STAR"
+
+        # Faz as letras aparecerem uma atrás da outra
+        for letra in self.inicial:
+            sys.stdout.write(letra)
+            sys.stdout.flush()
+            time.sleep(0.05)  # Ajuste a velocidade das letras aqui (menor = mais rápido)
+
+        # Fica 5 segundos na tela
+        time.sleep(5)
+
+        # Limpa a tela (funciona no Windows)
+        os.system('cls' if os.name == 'nt' else 'clear')
 
 class Estrela:
     def __init__(self, x, y):
@@ -189,6 +208,7 @@ class Jogo:
         
        
 
+inicial = telainicial()
 # Inicializa o jogo diretamente
 Jogo()
 
