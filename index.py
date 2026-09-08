@@ -1,13 +1,16 @@
 import pyxel
 class Estrela:
+    
     def __init__(self, x, y):
         self.x = x#Atributo
         self.y = y
         self.coletada = False
+
     def desenhar(self):
         if not self.coletada:
             tela_x, tela_y = self.converter_coordenada()#Chamou a função
             pyxel.text(tela_x, tela_y, '*', 7)
+
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
         tela_y = 170 - self.y * 20
@@ -17,16 +20,20 @@ class Reta:
     def __init__(self, a, b):
         self.a = a
         self.b = b
+
     def calcular_y(self, x):
         return self.a * x + self.b
+    
     def passa_por(self, estrela):
         y_calculado = self.calcular_y(estrela.x)
         return y_calculado == estrela.y
+    
     #Vericar todas as estrelas quando encontrar ele coleta.
     def coletar_estrelas(self, estrelas):
         for estrela in estrelas:
             if self.passa_por(estrela):
                 estrela.coletada = True
+
     def desenhar(self):
         anterior_x = None
         anterior_y = None
@@ -50,8 +57,10 @@ class Jogo:
             if estrela.coletada:
                  total_de_estrelas += 1
         return total_de_estrelas
+    
     def update(self):
         pass
+
     def draw(self):
         #Painel Superior
         pyxel.rect(0, 0, 100, 300, 1)
