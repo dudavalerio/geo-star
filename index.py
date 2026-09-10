@@ -1,15 +1,17 @@
 import math
 import pyxel
-
+import random
 class Estrela:
     def __init__(self, x, y):
         self.x = x#Atributo
         self.y = y
         self.coletada = False
+
     def desenhar(self):
         if not self.coletada:
             tela_x, tela_y = self.converter_coordenada()#Chamou a função
             pyxel.text(tela_x, tela_y, '*', 7)
+
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
         tela_y = 170 - self.y * 20
@@ -51,14 +53,20 @@ class Jogo:
         # Criamos a nossa reta inicial padrão (a=1, b=3)
         self.reta1 = Reta(1, 3)
         
-        # Lista de estrelas guardada dentro do jogo
-        self.estrelas = [
-            Estrela(1, -1),
-            Estrela(3, 2),
-            Estrela(-4, 3),
-            Estrela(5, -2)
-        ]
-        
+        #Quantidade de estrelas aleatória
+        quant = random.randint(4,8)
+        #Lista de estrelas do jogo
+        self.estrelas = []
+        posições = []
+        for i in range(quant):
+            x = random.randint(-7, 7)
+            y = random.randint(-6, 6)
+            while (x, y) in posições:
+                x = random.randint(-7, 7)
+                y = random.randint(-6, 6)
+            estrela = Estrela(x, y)
+            self.estrelas.append(estrela)
+            posições.append((x, y))       
         pyxel.run(self.update, self.draw)
     
     def update(self):
@@ -127,7 +135,7 @@ class Jogo:
             estrela.desenhar()
             
         # Interface de Texto por cima
-        pyxel.text(340, 10, 'GeoStar', 10)
+        pyxel.text(239, 10, 'GeoStar', 10)
         
         # Caixa de Input do 'a'
         pyxel.text(10, 10, "Valor de 'a' (inclinacao):", 7)
@@ -145,21 +153,9 @@ class Jogo:
         # Renderiza os textos separados nas suas respectivas caixas
         pyxel.text(14, 29, self.texto_1 + (cursor if self.foco_input == "a" else ""), 7)
         pyxel.text(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""), 7)
-        
         # Mostra o status da equação atual na tela
-        pyxel.text(250, 280, f"Equacao: y = {self.reta1.a}x + {self.reta1.b}", 12)
-        
+        #pyxel.text(250, 280, f"Equacao: y = {self.reta1.a}x + {self.reta1.b}", 12)
         pyxel.mouse(True) #habilita o mouse em cima da janela
-        
-        # Desenha a Grade Azul (1)
-        #for x in range(0, 401, 20):
-        #    pyxel.line(x, 0, x, 300, 1)
-        #for y in range(0, 301, 20):
-        #    pyxel.line(0, y, 400, y, 1)
-            
-        # Desenha os Eixos Principais Brancos (7)
-        #pyxel.line(0, 150, 400, 150, 7) # Eixo X
-        #pyxel.line(200, 0, 200, 300, 7) # Eixo Y
         
          # Grade Vertical
         for x in range(-7, 8):
@@ -185,10 +181,6 @@ class Jogo:
             if y != 0:
                 tela_y = 170 - y * 20#Calculamos onde ele deve aparecer na tela
                 pyxel.text(254, tela_y, str(y), 9)
-
-        
-       
-
 # Inicializa o jogo diretamente
 Jogo()
 
