@@ -132,7 +132,7 @@ class Jogo:
             estrela.desenhar()
             
         # Interface de Texto por cima
-        pyxel.text(240, 10, 'GeoStar', 10)
+        pyxel.text(239, 10, 'GeoStar', 10)
         
         # Caixa de Input do 'a'
         pyxel.text(10, 10, "Valor de 'a' (inclinacao):", 7)
