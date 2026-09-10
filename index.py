@@ -8,7 +8,7 @@ class telainicial:
     def __init__(self):
         self.inicial = "BEM VINDO AO GEO-STAR"
 
-        # Faz as letras aparecerem uma atrás da outra
+    # Faz as letras aparecerem uma atrás da outra
         for letra in self.inicial:
             sys.stdout.write(letra)
             sys.stdout.flush()
@@ -19,6 +19,7 @@ class telainicial:
 
         # Limpa a tela (funciona no Windows)
         os.system('cls' if os.name == 'nt' else 'clear')
+
 
 class Estrela:
     def __init__(self, x, y):
@@ -79,6 +80,7 @@ class Jogo:
         ]
         
         pyxel.run(self.update, self.draw)
+
     
     def update(self):
         # Captura os caracteres digitados no teclado
@@ -206,9 +208,7 @@ class Jogo:
                 pyxel.text(254, tela_y, str(y), 9)
 
         
-       
-
-inicial = telainicial()
+telainicial()
 # Inicializa o jogo diretamente
 Jogo()
 
