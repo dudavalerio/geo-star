@@ -57,13 +57,12 @@ class Jogo:
         quant = random.randint(4,8)
         #Lista de estrelas do jogo
         self.estrelas = []
+        posiçoes = []
         for i in range(quant):
             x = random.randint(-7, 7)
             y = random.randint(-6, 6)
             estrela = Estrela(x, y)
-            self.estrelas.append(estrela)
-        
-        
+            self.estrelas.append(estrela)       
         pyxel.run(self.update, self.draw)
     
     def update(self):
@@ -150,10 +149,8 @@ class Jogo:
         # Renderiza os textos separados nas suas respectivas caixas
         pyxel.text(14, 29, self.texto_1 + (cursor if self.foco_input == "a" else ""), 7)
         pyxel.text(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""), 7)
-        
         # Mostra o status da equação atual na tela
-        pyxel.text(250, 280, f"Equacao: y = {self.reta1.a}x + {self.reta1.b}", 12)
-        
+        #pyxel.text(250, 280, f"Equacao: y = {self.reta1.a}x + {self.reta1.b}", 12)
         pyxel.mouse(True) #habilita o mouse em cima da janela
         
          # Grade Vertical
