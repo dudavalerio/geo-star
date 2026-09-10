@@ -57,12 +57,16 @@ class Jogo:
         quant = random.randint(4,8)
         #Lista de estrelas do jogo
         self.estrelas = []
-        posiçoes = []
+        posições = []
         for i in range(quant):
             x = random.randint(-7, 7)
             y = random.randint(-6, 6)
+            while (x, y) in posições:
+                x = random.randint(-7, 7)
+                y = random.randint(-6, 6)
             estrela = Estrela(x, y)
-            self.estrelas.append(estrela)       
+            self.estrelas.append(estrela)
+            posições.append((x, y))       
         pyxel.run(self.update, self.draw)
     
     def update(self):
