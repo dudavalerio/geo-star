@@ -42,6 +42,55 @@ class Reta:
             anterior_x = tela_x
             anterior_y = tela_y
 
+class Plano:
+    def __init__(self):
+        
+        # Habilita a visibilidade do cursor do mouse
+        pyxel.mouse(True)
+
+    def desenhar(self):
+        # Grade Vertical
+        for x in range(-7, 8):
+            tela_x = 250 + x * 20
+            pyxel.line(tela_x, 40, tela_x, 300, 1)
+            
+        # Grade Horizontal
+        for y in range(-6, 7):
+            tela_y = 170 - y * 20
+            pyxel.line(100, tela_y, 400, tela_y, 1)
+            
+        # Eixos principais destacados por cima da grade
+        pyxel.line(100, 170, 400, 170, 7)
+        pyxel.line(250, 40, 250, 300, 7)
+            
+        # Números do eixo X
+        for x in range(-7, 8):
+            if x != 0:
+                tela_x = 250 + x * 20
+                pyxel.text(tela_x, 174, str(x), 12)
+        
+        pyxel.text(245, 174, '0', 7)
+        
+        # Números do eixo Y
+        for y in range(-6, 7):
+            if y != 0:
+                tela_y = 170 - y * 20
+                pyxel.text(254, tela_y, str(y), 9)
+        
+        # Coordenadas no cursor
+        mouse_tela_x = pyxel.mouse_x
+        mouse_tela_y = pyxel.mouse_y
+        
+        centro_grade_x = 250
+        centro_grade_y = 170
+        
+        cartesian_x = round((mouse_tela_x - centro_grade_x) / 20)
+        cartesian_y = round((centro_grade_y - mouse_tela_y) / 20)
+        
+        texto_coordenadas = f"X: {cartesian_x}, Y: {cartesian_y}"
+        pyxel.text(mouse_tela_x + 10, mouse_tela_y + 10, texto_coordenadas, 7)
+
+
 class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
@@ -50,8 +99,12 @@ class Jogo:
         self.texto_2 = ""  # Guarda o input de 'b'
         self.foco_input = "a"  # Controla em qual caixa o jogador está digitando ("a" ou "b")
         
+        # Criamos o Plano cartesiano
+        self.plano = Plano()
+        
         # Criamos a nossa reta inicial padrão (a=1, b=3)
         self.reta1 = Reta(1, 3)
+        
         #Quantidade de estrelas aleatória
         quant = random.randint(4,8)
         #Lista de estrelas do jogo
@@ -127,8 +180,9 @@ class Jogo:
 
     def draw(self):
         pyxel.cls(0)
-
-        #total_de_estrelas = self.contar_estrelas(estrelas)
+        
+        #Desenha o Plano de fundo primeiro
+        self.plano.desenhar()
         
         # Desenha a Reta e as Estrelas
         self.reta1.desenhar()
@@ -157,30 +211,6 @@ class Jogo:
         
         pyxel.mouse(True) #habilita o mouse em cima da janela
         
-         # Grade Vertical
-        for x in range(-7, 8):
-            tela_x = 250 + x * 20
-            pyxel.line(tela_x, 40, tela_x, 300, 1)
-            
-        #Grade Horizontal
-        for y in range(-6, 7):
-            tela_y = 170 - y * 20
-            pyxel.line(100, tela_y, 400, tela_y, 1)
-            
-        # Eixos
-        pyxel.line(100, 170, 400, 170, 7)
-        pyxel.line(250, 40, 250, 300, 7)
-        #Números do eixo X
-        for x in range(-7, 8):
-            if x != 0:
-                tela_x = 250 + x * 20#Calculamos onde ele deve aparecer na tela
-                pyxel.text(tela_x, 174, str(x), 12)
-        pyxel.text(245, 174, '0', 7)
-        #Números do eixo y
-        for y in range(-6, 7):
-            if y != 0:
-                tela_y = 170 - y * 20#Calculamos onde ele deve aparecer na tela
-                pyxel.text(254, tela_y, str(y), 9)
+        
 # Inicializa o jogo diretamente
 Jogo()
-
