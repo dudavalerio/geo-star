@@ -3,13 +3,15 @@ import pyxel
 import random
 class Estrela:
     def __init__(self, x, y):
-        self.x = x#Atributo
+        #Atribuição
+        self.x = x
         self.y = y
         self.coletada = False
 
     def desenhar(self):
         if not self.coletada:
-            tela_x, tela_y = self.converter_coordenada()#Chamou a função
+            #Chamou a função
+            tela_x, tela_y = self.converter_coordenada()
             pyxel.text(tela_x, tela_y, '*', 7)
 
     def converter_coordenada(self):
@@ -179,6 +181,7 @@ class Jogo:
         #Números do eixo y
         for y in range(-6, 7):
             if y != 0:
+                
                 tela_y = 170 - y * 20#Calculamos onde ele deve aparecer na tela
                 pyxel.text(254, tela_y, str(y), 9)
 # Inicializa o jogo diretamente
