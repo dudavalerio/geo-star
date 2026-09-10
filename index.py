@@ -1,6 +1,6 @@
 import math
 import pyxel
-
+import random
 class Estrela:
     def __init__(self, x, y):
         self.x = x#Atributo
@@ -53,8 +53,16 @@ class Jogo:
         # Criamos a nossa reta inicial padrão (a=1, b=3)
         self.reta1 = Reta(1, 3)
         
-        # Lista de estrelas guardada dentro do jogo
-        self.estrelas = [Estrela(1, -1),Estrela(3, 2),Estrela(-4, 3),Estrela(5, -2)]
+        #Quantidade de estrelas aleatória
+        quant = random.randint(4,8)
+        #Lista de estrelas do jogo
+        self.estrelas = []
+        for i in range(quant):
+            x = random.randint(-7, 7)
+            y = random.randint(-6, 6)
+            estrela = Estrela(x, y)
+            self.estrelas.append(estrela)
+        
         
         pyxel.run(self.update, self.draw)
     
@@ -124,7 +132,7 @@ class Jogo:
             estrela.desenhar()
             
         # Interface de Texto por cima
-        pyxel.text(340, 10, 'GeoStar', 10)
+        pyxel.text(240, 10, 'GeoStar', 10)
         
         # Caixa de Input do 'a'
         pyxel.text(10, 10, "Valor de 'a' (inclinacao):", 7)
