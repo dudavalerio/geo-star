@@ -242,9 +242,6 @@ class Jogo:
                 tela_y = 170 - y * 20
                 pyxel.text(254, tela_y, str(y), 9)
 
-Jogo()
-        pyxel.mouse(True) #habilita o mouse em cima da janela
-        
         
 # Inicializa o jogo diretamente
 Jogo()
