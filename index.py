@@ -207,7 +207,6 @@ class Jogo:
                 tela_y = 170 - y * 20#Calculamos onde ele deve aparecer na tela
                 pyxel.text(254, tela_y, str(y), 9)
 
-        
 telainicial()
 # Inicializa o jogo diretamente
 Jogo()
