@@ -1,21 +1,64 @@
 import math
-import pyxel
+import os
+import sys
 import random
+import pyxel
+
+
+class TelaInicial:
+    def __init__(self):
+        self.titulo_completo = "BEM VINDO AO GEO-STAR"
+        self.titulo_atual = ""
+
+    def update(self):
+        # Mudei de 4 para 2 para o texto aparecer mais rápido!
+        # Quanto menor o número, mais rápido as letras aparecem.
+        if len(self.titulo_atual) < len(self.titulo_completo):
+            if pyxel.frame_count % 2 == 0:
+                self.titulo_atual += self.titulo_completo[len(self.titulo_atual)]
+        
+        if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
+            if len(self.titulo_atual) < len(self.titulo_completo):
+                self.titulo_atual = self.titulo_completo
+            else:
+                return "JOGANDO"
+                
+        return "TELA_INICIAL"
+        # Se apertar ENTER: completa o texto se estiver digitando, ou avança de tela
+        if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
+            if len(self.titulo_atual) < len(self.titulo_completo):
+                self.titulo_atual = self.titulo_completo
+            else:
+                return "JOGANDO" # Sinaliza que deve mudar o estado no jogo principal
+                
+        return "TELA_INICIAL"
+
+    def draw(self):
+        pyxel.cls(0)
+        pyxel.text(120, 130, self.titulo_atual, 7)
+        
+        # Mostra o aviso de pressionar ENTER apenas quando terminar de digitar
+        if len(self.titulo_atual) == len(self.titulo_completo):
+            if (pyxel.frame_count // 15) % 2 == 0:
+                pyxel.text(100, 160, "Pressione ENTER para continuar", 13)
+
+
 class Estrela:
     def __init__(self, x, y):
-        self.x = x
+        self.x = x  
         self.y = y
         self.coletada = False
 
     def desenhar(self):
         if not self.coletada:
-            tela_x, tela_y = self.converter_coordenada()
-            pyxel.text(tela_x, tela_y, '*', 7)
+            tela_x, tela_y = self.converter_coordenada()  
+            pyxel.text(tela_x, tela_y, "*", 7)
 
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
         tela_y = 170 - self.y * 20
         return tela_x, tela_y
+
 
 class Reta:
     def __init__(self, a, b):
@@ -41,99 +84,36 @@ class Reta:
             anterior_x = tela_x
             anterior_y = tela_y
 
-class Plano:
-    def __init__(self):
-        
-        # Habilita a visibilidade do cursor do mouse
-        pyxel.mouse(True)
-
-    def desenhar(self):
-        # Grade Vertical
-        for x in range(-7, 8):
-            tela_x = 250 + x * 20
-            pyxel.line(tela_x, 40, tela_x, 300, 1)
-            
-        # Grade Horizontal
-        for y in range(-6, 7):
-            tela_y = 170 - y * 20
-            pyxel.line(100, tela_y, 400, tela_y, 1)
-            
-        # Eixos principais destacados por cima da grade
-        pyxel.line(100, 170, 400, 170, 7)
-        pyxel.line(250, 40, 250, 300, 7)
-            
-        # Números do eixo X
-        for x in range(-7, 8):
-            if x != 0:
-                tela_x = 250 + x * 20
-                pyxel.text(tela_x, 174, str(x), 12)
-        
-        pyxel.text(245, 174, '0', 7)
-        
-        # Números do eixo Y
-        for y in range(-6, 7):
-            if y != 0:
-                tela_y = 170 - y * 20
-                pyxel.text(254, tela_y, str(y), 9)
-        
-        # Coordenadas no cursor
-        mouse_tela_x = pyxel.mouse_x
-        mouse_tela_y = pyxel.mouse_y
-        
-        centro_grade_x = 250
-        centro_grade_y = 170
-        
-        cartesian_x = round((mouse_tela_x - centro_grade_x) / 20)
-        cartesian_y = round((centro_grade_y - mouse_tela_y) / 20)
-        
-        texto_coordenadas = f"X: {cartesian_x}, Y: {cartesian_y}"
-        pyxel.text(mouse_tela_x + 10, mouse_tela_y + 10, texto_coordenadas, 7)
-
 
 class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
         
+        # Instancia a classe da tela inicial e define o estado
+        self.estado = "TELA_INICIAL"
+        self.tela_inicial = TelaInicial()
+        
+        # Variáveis do jogo principal
         self.texto_1 = ""  
         self.texto_2 = ""  
         self.foco_input = "a"  
-        
+
         self.reta1 = Reta(1, 3)
-        
-        quant = random.randint(4, 8)
-        self.tentativas_restantes = quant * 2
-        self.jogo_encerrado = False
-        
-        # Criamos o Plano cartesiano
-        self.plano = Plano()
-        
-        # Criamos a nossa reta inicial padrão (a=1, b=3)
-        self.reta1 = Reta(1, 3)
-        
-        #Quantidade de estrelas aleatória
-        quant = random.randint(4,8)
-        #Lista de estrelas do jogo
-        self.estrelas = []
-        posições = []
-        for i in range(quant):
-            x = random.randint(-7, 7)
-            y = random.randint(-6, 6)
-            while (x, y) in posições:
-                x = random.randint(-7, 7)
-                y = random.randint(-6, 6)
-            estrela = Estrela(x, y)
-            self.estrelas.append(estrela)
-            posições.append((x, y))       
+        self.estrelas = [Estrela(1, -1), Estrela(3, 2), Estrela(-4, 3), Estrela(5, -2)]
+
         pyxel.run(self.update, self.draw)
-    
+
     def update(self):
-        if self.jogo_encerrado:
+        # 1. SE ESTIVER NA TELA INICIAL, DELEGA PARA A CLASSE DELA
+        if self.estado == "TELA_INICIAL":
+            self.estado = self.tela_inicial.update()
             return
 
+        # 2. LÓGICA DO JOGO PRINCIPAL
         caracteres_digitados = pyxel.input_text
         
         for caractere in caracteres_digitados:
-            if caractere.isdigit() or caractere in ('-', '.', '/'):
+            if caractere.isdigit() or caractere in ("-", ".", "/"):
                 if self.foco_input == "a":
                     self.texto_1 += caractere
                 elif self.foco_input == "b":
@@ -144,28 +124,20 @@ class Jogo:
                 self.texto_1 = self.texto_1[:-1]
             elif self.foco_input == "b":
                 self.texto_2 = self.texto_2[:-1]
-                
+
         if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
             try:
-                if self.texto_1 in ("", "-"): self.texto_1 = "0"
-                if self.texto_2 in ("", "-"): self.texto_2 = "0"
-                
+                if self.texto_1 in ("", "-"):
+                    self.texto_1 = "0"
+                if self.texto_2 in ("", "-"):
+                    self.texto_2 = "0"
+
                 self.reta1.a = int(self.texto_1)
                 self.reta1.b = int(self.texto_2)
-                
-                coletadas_antes = sum(1 for e in self.estrelas if e.coletada)
                 self.verificar_todas_colisoes()
-                coletadas_depois = sum(1 for e in self.estrelas if e.coletada)
-                
-                if coletadas_depois == coletadas_antes:
-                    self.tentativas_restantes -= 1
-                    
-                if self.tentativas_restantes <= 0:
-                    self.jogo_encerrado = True
-
             except ValueError:
-                pass 
-            
+                pass  
+
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
             if 8 <= pyxel.mouse_x <= 78 and 22 <= pyxel.mouse_y <= 42:
                 self.foco_input = "a"
@@ -178,70 +150,65 @@ class Jogo:
                 numerador = abs(self.reta1.a * estrela.x - estrela.y + self.reta1.b)
                 denominador = math.sqrt(self.reta1.a**2 + 1)
                 distancia = numerador / denominador
-                
+
                 if distancia <= 0.3:
                     estrela.coletada = True
                     print(f"⭐ Estrela na coordenada ({estrela.x}, {estrela.y}) capturada!")
 
     def draw(self):
+        # 1. SE ESTIVER NA TELA INICIAL, DESENHA USANDO A CLASSE DELA
+        if self.estado == "TELA_INICIAL":
+            self.tela_inicial.draw()
+            return
+
+        # 2. DESENHO DO JOGO PRINCIPAL
         pyxel.cls(0)
-        
-        #Desenha o Plano de fundo primeiro
-        self.plano.desenhar()
-        
-        # Desenha a Reta e as Estrelas
+
         self.reta1.desenhar()
         for estrela in self.estrelas:
             estrela.desenhar()
-            
-        pyxel.text(239, 10, 'GeoStar', 10)
-        pyxel.text(10, 95, f"Tentativas Restantes: {self.tentativas_restantes}", 8 if self.tentativas_restantes <= 2 else 7)
-        # Interface de Texto por cima
-        pyxel.text(239, 10, 'GeoStar', 10)
-        
+
+        pyxel.text(340, 10, "GeoStar", 10)
+
         pyxel.text(10, 10, "Valor de 'a' (inclinacao):", 7)
         cor_borda_a = 11 if self.foco_input == "a" else 5  
         pyxel.rectb(8, 22, 70, 20, cor_borda_a)
-        
+
         pyxel.text(10, 52, "Valor de 'b' (intercepto Y):", 7)
         cor_borda_b = 11 if self.foco_input == "b" else 5  
         pyxel.rectb(8, 62, 70, 20, cor_borda_b)
-        
+
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
-        
+
         pyxel.text(14, 29, self.texto_1 + (cursor if self.foco_input == "a" else ""), 7)
         pyxel.text(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""), 7)
-        
-        pyxel.mouse(True) 
-        
-        if self.jogo_encerrado:
-            pyxel.rect(130, 120, 140, 40, 0)
-            pyxel.rectb(130, 120, 140, 40, 8)
-            pyxel.text(155, 132, "FIM DE JOGO!", 8)
-            pyxel.text(142, 144, "Acabaram as tentativas", 7)
-        
+
+        pyxel.text(250, 280, f"Equacao: y = {self.reta1.a}x + {self.reta1.b}", 12)
+
+        pyxel.mouse(True)  
+
         for x in range(-7, 8):
             tela_x = 250 + x * 20
             pyxel.line(tela_x, 40, tela_x, 300, 1)
-            
+
         for y in range(-6, 7):
             tela_y = 170 - y * 20
             pyxel.line(100, tela_y, 400, tela_y, 1)
-            
+
         pyxel.line(100, 170, 400, 170, 7)
         pyxel.line(250, 40, 250, 300, 7)
         
         for x in range(-7, 8):
             if x != 0:
-                tela_x = 250 + x * 20
+                tela_x = 250 + x * 20  
                 pyxel.text(tela_x, 174, str(x), 12)
-        pyxel.text(245, 174, '0', 7)
+        pyxel.text(245, 174, "0", 7)
         
         for y in range(-6, 7):
             if y != 0:
-                tela_y = 170 - y * 20
+                tela_y = 170 - y * 20  
                 pyxel.text(254, tela_y, str(y), 9)
 
-        
-# Inicializa o jogo diretamente
+
+# Inicializa o jogo
 Jogo()
