@@ -89,6 +89,17 @@ class Reta:
     def calcular_y(self, x):
         return self.a * x + self.b
 
+        #Verificar se a reta passa por estrelas
+    def pass_por(self, estrela):
+        y_calculado = self.calcular_y(estrela.x)
+        return y_calculado == estrela.y
+
+    #Coletar ou tirar estrela do plano
+    def coletar_estrelas(self, estrelas):
+        for estrela in estrelas:
+            if self.pass_por(estrela):
+                estrela.coletada = True
+
     def desenhar(self):
         anterior_x = None
         anterior_y = None
