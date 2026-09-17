@@ -1,6 +1,7 @@
 import math
 import pyxel
 import random
+
 class Estrela:
     def __init__(self, x, y):
         self.x = x
@@ -43,26 +44,20 @@ class Reta:
 
 class Plano:
     def __init__(self):
-        
-        # Habilita a visibilidade do cursor do mouse
         pyxel.mouse(True)
 
     def desenhar(self):
-        # Grade Vertical
         for x in range(-7, 8):
             tela_x = 250 + x * 20
             pyxel.line(tela_x, 40, tela_x, 300, 1)
             
-        # Grade Horizontal
         for y in range(-6, 7):
             tela_y = 170 - y * 20
             pyxel.line(100, tela_y, 400, tela_y, 1)
             
-        # Eixos principais destacados por cima da grade
         pyxel.line(100, 170, 400, 170, 7)
         pyxel.line(250, 40, 250, 300, 7)
             
-        # Números do eixo X
         for x in range(-7, 8):
             if x != 0:
                 tela_x = 250 + x * 20
@@ -70,13 +65,11 @@ class Plano:
         
         pyxel.text(245, 174, '0', 7)
         
-        # Números do eixo Y
         for y in range(-6, 7):
             if y != 0:
                 tela_y = 170 - y * 20
                 pyxel.text(254, tela_y, str(y), 9)
         
-        # Coordenadas no cursor
         mouse_tela_x = pyxel.mouse_x
         mouse_tela_y = pyxel.mouse_y
         
@@ -89,41 +82,35 @@ class Plano:
         texto_coordenadas = f"X: {cartesian_x}, Y: {cartesian_y}"
         pyxel.text(mouse_tela_x + 10, mouse_tela_y + 10, texto_coordenadas, 7)
 
-
 class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
         
-        self.texto_1 = ""  
-        self.texto_2 = ""  
+        # Inicializa com os valores padrão correspondentes à reta inicial (a=1, b=3)
+        self.texto_1 = "1"  
+        self.texto_2 = "3"  
         self.foco_input = "a"  
+        self.mudou_valores = False  # Garante que só joga se realmente digitar algo novo
         
+        self.plano = Plano()
         self.reta1 = Reta(1, 3)
         
         quant = random.randint(4, 8)
         self.tentativas_restantes = quant * 2
         self.jogo_encerrado = False
         
-        # Criamos o Plano cartesiano
-        self.plano = Plano()
-        
-        # Criamos a nossa reta inicial padrão (a=1, b=3)
-        self.reta1 = Reta(1, 3)
-        
-        #Quantidade de estrelas aleatória
-        quant = random.randint(4,8)
-        #Lista de estrelas do jogo
         self.estrelas = []
-        posições = []
+        posicoes = []
         for i in range(quant):
             x = random.randint(-7, 7)
             y = random.randint(-6, 6)
-            while (x, y) in posições:
+            while (x, y) in posicoes:
                 x = random.randint(-7, 7)
                 y = random.randint(-6, 6)
             estrela = Estrela(x, y)
             self.estrelas.append(estrela)
-            posições.append((x, y))       
+            posicoes.append((x, y))       
+
         pyxel.run(self.update, self.draw)
     
     def update(self):
@@ -136,35 +123,44 @@ class Jogo:
             if caractere.isdigit() or caractere in ('-', '.', '/'):
                 if self.foco_input == "a":
                     self.texto_1 += caractere
+                    self.mudou_valores = True
                 elif self.foco_input == "b":
                     self.texto_2 += caractere
+                    self.mudou_valores = True
 
         if pyxel.btnp(pyxel.KEY_BACKSPACE):
             if self.foco_input == "a":
                 self.texto_1 = self.texto_1[:-1]
+                self.mudou_valores = True
             elif self.foco_input == "b":
                 self.texto_2 = self.texto_2[:-1]
+                self.mudou_valores = True
                 
+        # Só processa se o usuário realmente digitou/mudou valores e apertou Enter
         if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
-            try:
-                if self.texto_1 in ("", "-"): self.texto_1 = "0"
-                if self.texto_2 in ("", "-"): self.texto_2 = "0"
-                
-                self.reta1.a = int(self.texto_1)
-                self.reta1.b = int(self.texto_2)
-                
-                coletadas_antes = sum(1 for e in self.estrelas if e.coletada)
-                self.verificar_todas_colisoes()
-                coletadas_depois = sum(1 for e in self.estrelas if e.coletada)
-                
-                if coletadas_depois == coletadas_antes:
-                    self.tentativas_restantes -= 1
+            if self.mudou_valores:
+                try:
+                    if self.texto_1 in ("", "-"): self.texto_1 = "0"
+                    if self.texto_2 in ("", "-"): self.texto_2 = "0"
                     
-                if self.tentativas_restantes <= 0:
-                    self.jogo_encerrado = True
+                    self.reta1.a = int(self.texto_1)
+                    self.reta1.b = int(self.texto_2)
+                    
+                    # Verifica se coletou estrela nesta jogada
+                    pegou_estrela = self.verificar_todas_colisoes()
+                    
+                    # Se submeteu e NÃO pegou estrela, desconta uma tentativa
+                    if not pegou_estrela:
+                        self.tentativas_restantes -= 1
+                        
+                    if self.tentativas_restantes <= 0:
+                        self.jogo_encerrado = True
 
-            except ValueError:
-                pass 
+                    # Reseta a flag para exigir uma nova digitação na próxima jogada
+                    self.mudou_valores = False
+
+                except ValueError:
+                    pass 
             
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
             if 8 <= pyxel.mouse_x <= 78 and 22 <= pyxel.mouse_y <= 42:
@@ -173,6 +169,7 @@ class Jogo:
                 self.foco_input = "b"
 
     def verificar_todas_colisoes(self):
+        colidiu_agora = False
         for estrela in self.estrelas:
             if not estrela.coletada:
                 numerador = abs(self.reta1.a * estrela.x - estrela.y + self.reta1.b)
@@ -181,23 +178,22 @@ class Jogo:
                 
                 if distancia <= 0.3:
                     estrela.coletada = True
+                    colidiu_agora = True
                     print(f"⭐ Estrela na coordenada ({estrela.x}, {estrela.y}) capturada!")
+                    
+        return colidiu_agora
 
     def draw(self):
         pyxel.cls(0)
         
-        #Desenha o Plano de fundo primeiro
         self.plano.desenhar()
-        
-        # Desenha a Reta e as Estrelas
         self.reta1.desenhar()
+        
         for estrela in self.estrelas:
             estrela.desenhar()
             
         pyxel.text(239, 10, 'GeoStar', 10)
         pyxel.text(10, 95, f"Tentativas Restantes: {self.tentativas_restantes}", 8 if self.tentativas_restantes <= 2 else 7)
-        # Interface de Texto por cima
-        pyxel.text(239, 10, 'GeoStar', 10)
         
         pyxel.text(10, 10, "Valor de 'a' (inclinacao):", 7)
         cor_borda_a = 11 if self.foco_input == "a" else 5  
@@ -212,34 +208,10 @@ class Jogo:
         pyxel.text(14, 29, self.texto_1 + (cursor if self.foco_input == "a" else ""), 7)
         pyxel.text(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""), 7)
         
-        pyxel.mouse(True) 
-        
         if self.jogo_encerrado:
             pyxel.rect(130, 120, 140, 40, 0)
             pyxel.rectb(130, 120, 140, 40, 8)
             pyxel.text(155, 132, "FIM DE JOGO!", 8)
             pyxel.text(142, 144, "Acabaram as tentativas", 7)
-        
-        for x in range(-7, 8):
-            tela_x = 250 + x * 20
-            pyxel.line(tela_x, 40, tela_x, 300, 1)
-            
-        for y in range(-6, 7):
-            tela_y = 170 - y * 20
-            pyxel.line(100, tela_y, 400, tela_y, 1)
-            
-        pyxel.line(100, 170, 400, 170, 7)
-        pyxel.line(250, 40, 250, 300, 7)
-        
-        for x in range(-7, 8):
-            if x != 0:
-                tela_x = 250 + x * 20
-                pyxel.text(tela_x, 174, str(x), 12)
-        pyxel.text(245, 174, '0', 7)
-        
-        for y in range(-6, 7):
-            if y != 0:
-                tela_y = 170 - y * 20
-                pyxel.text(254, tela_y, str(y), 9)
 
 Jogo()
