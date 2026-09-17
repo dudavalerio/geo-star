@@ -166,6 +166,7 @@ class Jogo:
         self.modal = None
         self.mostrar_modal = False
         self.modal_timer = 0  # variável para contar o tempo da modal
+        self.foco_input = "a"  
         
         self.reta1 = Reta(1, 3)
         
@@ -326,4 +327,3 @@ class Jogo:
             self.modal_vitoria.desenhar()
         
 Jogo()
-
