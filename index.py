@@ -1,10 +1,42 @@
 import math
-import pyxel
+import os
+import sys
 import random
+import pyxel
+
+
+class TelaInicial:
+    def __init__(self):
+        self.titulo_completo = "BEM VINDO AO GEO-STAR"
+        self.titulo_atual = ""
+
+    def update(self):
+        if len(self.titulo_atual) < len(self.titulo_completo):
+            if pyxel.frame_count % 2 == 0:
+                self.titulo_atual += self.titulo_completo[len(self.titulo_atual)]
+        
+        if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
+            if len(self.titulo_atual) < len(self.titulo_completo):
+                self.titulo_atual = self.titulo_completo
+            else:
+                return "JOGANDO"
+                
+        return "TELA_INICIAL"
+        
+
+    def draw(self):
+        pyxel.cls(0)
+        pyxel.text(120, 130, self.titulo_atual, 7)
+        
+        # Mostra o aviso de pressionar ENTER apenas quando terminar de digitar
+        if len(self.titulo_atual) == len(self.titulo_completo):
+            if (pyxel.frame_count // 15) % 2 == 0:
+                pyxel.text(100, 160, "Pressione ENTER para continuar", 13)
+
 
 class Estrela:
     def __init__(self, x, y):
-        self.x = x
+        self.x = x  
         self.y = y
         self.coletada = False
 
@@ -17,6 +49,7 @@ class Estrela:
         tela_x = 250 + self.x * 20
         tela_y = 170 - self.y * 20
         return tela_x, tela_y
+
 
 class Reta:
     def __init__(self, a, b):
@@ -86,6 +119,10 @@ class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
         
+        # Instancia a classe da tela inicial e define o estado
+        self.estado = "TELA_INICIAL"
+        self.tela_inicial = TelaInicial()
+      
         # Inicializa com os valores padrão correspondentes à reta inicial (a=1, b=3)
         self.texto_1 = "1"  
         self.texto_2 = "3"  
@@ -112,7 +149,7 @@ class Jogo:
             posicoes.append((x, y))       
 
         pyxel.run(self.update, self.draw)
-    
+
     def update(self):
         if self.jogo_encerrado:
             return
@@ -184,6 +221,12 @@ class Jogo:
         return colidiu_agora
 
     def draw(self):
+        # 1. SE ESTIVER NA TELA INICIAL, DESENHA USANDO A CLASSE DELA
+        if self.estado == "TELA_INICIAL":
+            self.tela_inicial.draw()
+            return
+
+        # 2. DESENHO DO JOGO PRINCIPAL
         pyxel.cls(0)
         
         self.plano.desenhar()
@@ -207,6 +250,21 @@ class Jogo:
         
         pyxel.text(14, 29, self.texto_1 + (cursor if self.foco_input == "a" else ""), 7)
         pyxel.text(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""), 7)
+
+        pyxel.text(250, 280, f"Equacao: y = {self.reta1.a}x + {self.reta1.b}", 12)
+
+        pyxel.mouse(True)  
+
+        for x in range(-7, 8):
+            tela_x = 250 + x * 20
+            pyxel.line(tela_x, 40, tela_x, 300, 1)
+
+        for y in range(-6, 7):
+            tela_y = 170 - y * 20
+            pyxel.line(100, tela_y, 400, tela_y, 1)
+
+        pyxel.line(100, 170, 400, 170, 7)
+        pyxel.line(250, 40, 250, 300, 7)
         
         if self.jogo_encerrado:
             pyxel.rect(130, 120, 140, 40, 0)
