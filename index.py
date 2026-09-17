@@ -15,7 +15,7 @@ class ModalColeta:
                 pyxel.pset(x + 1, y + 1, 0)
         
         # Retãngulo sobreposto a tela, simulando uma modal
-        pyxel.rect(104, 114, 200, 50, 0)  # Retângulo preto ao fundo para dar profundidade
+        pyxel.rect(104, 114, 200, 50, 0)    # Retângulo preto ao fundo para dar profundidade
         pyxel.rect(100, 110, 200, 50, 11)   # Caixa verde
         pyxel.rectb(100, 110, 200, 50, 7)   # Borda branca da caixa
         
@@ -74,7 +74,7 @@ class Estrela:
     def desenhar(self):
         if not self.coletada:
             tela_x, tela_y = self.converter_coordenada()
-            pyxel.text(tela_x, tela_y, '*', 7)
+            pyxel.text(tela_x, tela_y, '***', 10)
 
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
