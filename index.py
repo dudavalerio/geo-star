@@ -11,8 +11,6 @@ class TelaInicial:
         self.titulo_atual = ""
 
     def update(self):
-        # Mudei de 4 para 2 para o texto aparecer mais rápido!
-        # Quanto menor o número, mais rápido as letras aparecem.
         if len(self.titulo_atual) < len(self.titulo_completo):
             if pyxel.frame_count % 2 == 0:
                 self.titulo_atual += self.titulo_completo[len(self.titulo_atual)]
@@ -24,14 +22,7 @@ class TelaInicial:
                 return "JOGANDO"
                 
         return "TELA_INICIAL"
-        # Se apertar ENTER: completa o texto se estiver digitando, ou avança de tela
-        if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
-            if len(self.titulo_atual) < len(self.titulo_completo):
-                self.titulo_atual = self.titulo_completo
-            else:
-                return "JOGANDO" # Sinaliza que deve mudar o estado no jogo principal
-                
-        return "TELA_INICIAL"
+        
 
     def draw(self):
         pyxel.cls(0)
