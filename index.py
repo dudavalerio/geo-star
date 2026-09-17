@@ -2,7 +2,33 @@ import math
 import pyxel
 import random
 
+class TelaInicial:
+    def __init__(self):
+        self.titulo_completo = "BEM VINDO AO GEO-STAR"
+        self.titulo_atual = ""
 
+    def update(self):
+        if len(self.titulo_atual) < len(self.titulo_completo):
+            if pyxel.frame_count % 2 == 0:
+                self.titulo_atual += self.titulo_completo[len(self.titulo_atual)]
+        
+        if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
+            if len(self.titulo_atual) < len(self.titulo_completo):
+                self.titulo_atual = self.titulo_completo
+            else:
+                return "JOGANDO"
+                
+        return "TELA_INICIAL"
+        
+
+    def draw(self):
+        pyxel.cls(0)
+        pyxel.text(120, 130, self.titulo_atual, 7)
+        
+        # Mostra o aviso de pressionar ENTER apenas quando terminar de digitar
+        if len(self.titulo_atual) == len(self.titulo_completo):
+            if (pyxel.frame_count // 15) % 2 == 0:
+                pyxel.text(100, 160, "Pressione ENTER para continuar", 13)
 class ModalColeta:
     def __init__(self, estrela):
         self.estrela = estrela
@@ -148,6 +174,10 @@ class Plano:
 class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
+
+        # Instancia a classe da tela inicial e define o estado
+        self.estado = "TELA_INICIAL"
+        self.tela_inicial = TelaInicial()
         
         self.texto_1 = ""  
         self.texto_2 = ""  
