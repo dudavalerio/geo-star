@@ -4,7 +4,7 @@ import random
 
 class TelaInicial:
     def __init__(self):
-        self.titulo_completo = "BEM VINDO AO GEO-STAR"
+        self.titulo_completo = "         BEM VINDO AO GEO-STAR"
         self.titulo_atual = ""
 
     def update(self):
@@ -19,7 +19,6 @@ class TelaInicial:
                 return "JOGANDO"
                 
         return "TELA_INICIAL"
-        
 
     def draw(self):
         pyxel.cls(0)
@@ -28,68 +27,57 @@ class TelaInicial:
         # Mostra o aviso de pressionar ENTER apenas quando terminar de digitar
         if len(self.titulo_atual) == len(self.titulo_completo):
             if (pyxel.frame_count // 15) % 2 == 0:
-                pyxel.text(100, 160, "Pressione ENTER para continuar", 13)
+                pyxel.text(100, 160, "           Pressione ENTER para continuar", 13)
+
 class ModalColeta:
     def __init__(self, estrela):
         self.estrela = estrela
     
     def desenhar(self):
-        # Efeito de sombra/overlay, varre a tela pulando pixels para criar uma cortina semitransparente escura
         for y in range(0, 300, 2):
             for x in range(0, 400, 2):
-                pyxel.pset(x, y, 0)       # Pixels pretos intercalados
+                pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
         
-        # Retãngulo sobreposto a tela, simulando uma modal
-        pyxel.rect(104, 114, 200, 50, 0)  # Retângulo preto ao fundo para dar profundidade
-        pyxel.rect(100, 110, 200, 50, 11)   # Caixa verde
-        pyxel.rectb(100, 110, 200, 50, 7)   # Borda branca da caixa
+        pyxel.rect(104, 114, 200, 50, 0)
+        pyxel.rect(100, 110, 200, 50, 11)
+        pyxel.rectb(100, 110, 200, 50, 7)
         
-        # Texto da modal
         pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 0)
-        
+
 class ModalFimJogo:
     def desenhar(self):
-       # Efeito de sombra/overlay, varre a tela pulando pixels para criar uma cortina semitransparente escura
         for y in range(0, 300, 2):
             for x in range(0, 400, 2):
-                pyxel.pset(x, y, 0)       # Pixels pretos intercalados
+                pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
                 
-        # Retãngulo sobreposto a tela, simulando uma modal
         pyxel.rect(134, 124, 140, 40, 0)
-        pyxel.rect(130, 120, 140, 40, 0)    # Fundo preto 
-        pyxel.rectb(130, 120, 140, 40, 8)   # Borda vermelha
+        pyxel.rect(130, 120, 140, 40, 0)
+        pyxel.rectb(130, 120, 140, 40, 8)
 
-        # Texto da modal
         pyxel.text(155, 132, "FIM DE JOGO!", 8)
         pyxel.text(142, 144, "Acabaram as tentativas", 7)
 
 class ModalVitoria:
-    # Recebe o total de estrelas e as tentativas que sobraram para mostrar no status
     def __init__(self, total_estrelas, tentativas_restantes):
         self.total_estrelas = total_estrelas
         self.tentativas_restantes = tentativas_restantes
 
     def desenhar(self):
-        # Efeito de sombra/overlay, varre a tela pulando pixels para criar uma cortina semitransparente escura
         for y in range(0, 300, 2):
             for x in range(0, 400, 2):
-                pyxel.pset(x, y, 0)       # Pixels pretos intercalados
+                pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
                 
-        # Retãngulo sobreposto a tela, simulando uma modal
-        pyxel.rect(104, 114, 200, 60, 0)    # Sombra
-        pyxel.rect(100, 110, 200, 60, 0)    # Fundo preto 
-        pyxel.rectb(100, 110, 200, 60, 11)  # Borda verde
+        pyxel.rect(104, 114, 200, 60, 0)
+        pyxel.rect(100, 110, 200, 60, 0)
+        pyxel.rectb(100, 110, 200, 60, 11)
 
-        # Textos da modal
         pyxel.text(110, 118, "VOCÊ VENCEU!", 11)
         pyxel.text(110, 130, "Todas as estrelas foram coletadas!", 7)
         pyxel.text(110, 145, f"Estrelas capturadas: {self.total_estrelas}", 7)
         pyxel.text(110, 155, f"Tentativas restantes: {self.tentativas_restantes}", 7)
-
-
 
 class Estrela:
     def __init__(self, x, y):
@@ -121,7 +109,6 @@ class Reta:
 
         for x in range(-10, 11):
             y = self.calcular_y(x)
-
             tela_x = 200 + x * 20
             tela_y = 150 - y * 20
 
@@ -175,38 +162,35 @@ class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
 
-        # Instancia a classe da tela inicial e define o estado
         self.estado = "TELA_INICIAL"
         self.tela_inicial = TelaInicial()
         
-        self.texto_1 = ""  
-        self.texto_2 = ""  
+        self.texto_1 = "1"  
+        self.texto_2 = "3"  
         self.foco_input = "a"
+        self.mudou_valores = False  
         
-        # Inicialização das flags de controle da Modal
         self.modal = None
         self.mostrar_modal = False
-        self.modal_timer = 0  # variável para contar o tempo da modal
-        self.foco_input = "a"  
-        self.mudou_valores = False  # Garante que só joga se realmente digitar algo novo
+        self.modal_timer = 0  
         
         self.plano = Plano()
         self.reta1 = Reta(1, 3)
         
-        quant = random.randint(4, 8)
-        self.tentativas_restantes = quant * 2
+        self.quant_estrelas = random.randint(4, 8)
+        self.tentativas_restantes = self.quant_estrelas * 2
         
         self.modal_fim = None
         self.jogo_encerrado = False
-        self.fim_timer = 0  # variável para contar o tempo da modal de fim do jogo
+        self.fim_timer = 0  
         
         self.modal_vitoria = None
         self.jogo_vencido = False
-        self.vitoria_timer = 0  # fechar o jogo após a vitória
+        self.vitoria_timer = 0  
         
         self.estrelas = []
         posicoes = []
-        for i in range(quant):
+        for i in range(self.quant_estrelas):
             x = random.randint(-7, 7)
             y = random.randint(-6, 6)
             while (x, y) in posicoes:
@@ -214,35 +198,41 @@ class Jogo:
                 y = random.randint(-6, 6)
             estrela = Estrela(x, y)
             self.estrelas.append(estrela)
-            posicoes.append((x, y))       
+            posicoes.append((x, y))      
 
         pyxel.run(self.update, self.draw)
     
     def update(self):
-        # Lógica da modal temporizada
+        # 1. Gerencia se está na Tela Inicial
+        if self.estado == "TELA_INICIAL":
+            proximo_estado = self.tela_inicial.update()
+            if proximo_estado == "JOGANDO":
+                self.estado = "JOGANDO"
+            return
+
+        # 2. Lógica da modal de coleta temporizada
         if self.mostrar_modal:
-            self.modal_timer -= 1     # Diminui o timer a cada frame
+            self.modal_timer -= 1    
             if self.modal_timer <= 0:
-                self.mostrar_modal = False # Esconde a modal quando o tempo acaba
-            return # Mantém o jogo pausado enquanto a modal estiver sumindo
+                self.mostrar_modal = False 
+            return 
         
-        # Lógica da modal de vitória temporizada (fecha após 3 segundos)
+        # 3. Lógica da modal de vitória
         if self.jogo_vencido:
             self.vitoria_timer -= 1
             if self.vitoria_timer <= 0:
-                pyxel.quit()  # Fecha o jogo automaticamente
+                pyxel.quit()  
             return
         
-        
+        # 4. Lógica de fim de jogo (derrota)
         if self.jogo_encerrado:
-            self.fim_timer -= 1      # Diminui o timer a cada frame
+            self.fim_timer -= 1      
             if self.fim_timer <= 0:
-                pyxel.quit()         # Fecha o jogo automaticamente após o temporizador
-                #Tela Inicial?
-            return # Impede que qualquer outra lógica rode após o fim do jogo
+                pyxel.quit()        
+            return
 
+        # 5. Entrada de dados via teclado
         caracteres_digitados = pyxel.input_text
-        
         for caractere in caracteres_digitados:
             if caractere.isdigit() or caractere in ('-', '.', '/'):
                 if self.foco_input == "a":
@@ -260,7 +250,7 @@ class Jogo:
                 self.texto_2 = self.texto_2[:-1]
                 self.mudou_valores = True
                 
-        # Só processa se o usuário realmente digitou/mudou valores e apertou Enter
+        # 6. Processamento ao apertar ENTER
         if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
             if self.mudou_valores:
                 try:
@@ -270,19 +260,24 @@ class Jogo:
                     self.reta1.a = int(self.texto_1)
                     self.reta1.b = int(self.texto_2)
                     
-                    # Verifica se coletou estrela nesta jogada
+                    # Verifica colisões
                     pegou_estrela = self.verificar_todas_colisoes()
                     
-                    # Se submeteu e NÃO pegou estrela, desconta uma tentativa
-                    if not pegou_estrela:
+                    # Checa condição de vitória (todas as estrelas coletadas)
+                    if all(e.coletada for e in self.estrelas):
+                        self.jogo_vencido = True
+                        self.modal_vitoria = ModalVitoria(self.quant_estrelas, self.tentativas_restantes)
+                        self.vitoria_timer = 180  # 3 segundos
+                    
+                    # Se submeteu e NÃO pegou estrela, desconta tentativa
+                    if not pegou_estrela and not self.jogo_vencido:
                         self.tentativas_restantes -= 1
                         
-                    if self.tentativas_restantes <= 0:
-                        self.jogo_encerrado = True
-                        self.modal_fim = ModalFimJogo()  # Instancia a modal
-                        self.fim_timer = 90  # 3 segundos
+                        if self.tentativas_restantes <= 0:
+                            self.jogo_encerrado = True
+                            self.modal_fim = ModalFimJogo()  
+                            self.fim_timer = 180  # 3 segundos
 
-                    # Reseta a flag para exigir uma nova digitação na próxima jogada
                     self.mudou_valores = False
 
                 except ValueError:
@@ -306,7 +301,7 @@ class Jogo:
                     estrela.coletada = True
                     self.modal = ModalColeta(estrela) 
                     self.mostrar_modal = True
-                    self.modal_timer = 120  # Define que a modal vai durar 120 frames (4 segundos)
+                    self.modal_timer = 120  # 2 segundos
                     colidiu_agora = True
                     print(f"⭐ Estrela na coordenada ({estrela.x}, {estrela.y}) capturada!")
                     
@@ -315,6 +310,12 @@ class Jogo:
     def draw(self):
         pyxel.cls(0)
         
+        # Se estiver na tela inicial, desenha apenas ela e sai
+        if self.estado == "TELA_INICIAL":
+            self.tela_inicial.draw()
+            return
+        
+        # Desenho do jogo normal
         self.plano.desenhar()
         self.reta1.desenhar()
         
@@ -339,14 +340,14 @@ class Jogo:
         
         pyxel.mouse(True)
         
-        # Telas de sobreposição (coleta e Fim de jogo)
+        # Telas de sobreposição (modais)
         if self.mostrar_modal and self.modal is not None:
             self.modal.desenhar()
         
-        if self.jogo_encerrado:
+        if self.jogo_encerrado and self.modal_fim is not None:
             self.modal_fim.desenhar()
             
-        if self.jogo_vencido:
+        if self.jogo_vencido and self.modal_vitoria is not None:
             self.modal_vitoria.desenhar()
-        
+         
 Jogo()
