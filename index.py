@@ -1,7 +1,7 @@
 import math
 import pyxel
 import random
-
+from fractions import Fraction
 
 class ModalColeta:
     def __init__(self, estrela):
@@ -66,21 +66,41 @@ class ModalVitoria:
 
 
 class Estrela:
-    def __init__(self, x, y):
+    def __init__(self, x, y, largura, altura, cor, sprite_x, sprite_y):
         self.x = x
         self.y = y
+        self.largura=largura
+        self.altura=altura
+
+        self.sprite_x = sprite_x,
+        self.sprite_y = sprite_y,
+
+
+        self.cor = cor
         self.coletada = False
+        
 
     def desenhar(self):
         if not self.coletada:
             tela_x, tela_y = self.converter_coordenada()
-            pyxel.text(tela_x, tela_y, '*', 7)
+
+            pyxel.blt(
+                tela_x,
+                tela_y,
+                0,              # Banco de imagens
+                self.sprite_x,
+                self.sprite_y,              # posição da imagem dentro do banco
+                self.largura,
+                self.altura,
+                self.cor        # cor transparente
+            )
 
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
         tela_y = 170 - self.y * 20
         return tela_x, tela_y
 
+    
 class Reta:
     def __init__(self, a, b):
         self.a = a
@@ -96,8 +116,8 @@ class Reta:
         for x in range(-10, 11):
             y = self.calcular_y(x)
 
-            tela_x = 200 + x * 20
-            tela_y = 150 - y * 20
+            tela_x = 200 + (x) * 20
+            tela_y = 150 - (y) * 20
 
             if anterior_x is not None:
                 pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
@@ -161,7 +181,7 @@ class Jogo:
         self.mudou_valores = False  # Garante que só joga se realmente digitar algo novo
         
         self.plano = Plano()
-        self.reta1 = Reta(1, 3)
+        self.reta1 = None # Reta não aparece inicialmente
         
         quant = random.randint(4, 8)
         self.tentativas_restantes = quant * 2
@@ -182,11 +202,37 @@ class Jogo:
             while (x, y) in posicoes:
                 x = random.randint(-7, 7)
                 y = random.randint(-6, 6)
-            estrela = Estrela(x, y)
+            sprite_x = random.choice([0, 16, 32, 48, 64])
+            sprite_y = 0
+            estrela = Estrela(x, y,14,18,7, sprite_x, sprite_y)
             self.estrelas.append(estrela)
-            posicoes.append((x, y))       
+            posicoes.append((x, y))
+
+        #Carregar imagem
+        pyxel.images[0].load(0, 0,"estrelas.png")  
 
         pyxel.run(self.update, self.draw)
+
+    def converter_numero(self, texto):
+        texto = texto.strip()
+
+        # Fração
+        if "/" in texto:
+            partes = texto.split("/") #cria um array com os indices antes da bara e depois da barra
+
+            if len(partes) != 2:
+                raise ValueError
+
+            numerador = float(partes[0])
+            denominador = float(partes[1])
+
+            if denominador == 0:
+                raise ValueError
+
+            return numerador / denominador
+
+        # Número inteiro ou decimal
+        return float(texto)
     
     def update(self):
         # Lógica da modal temporizada
@@ -196,7 +242,7 @@ class Jogo:
                 self.mostrar_modal = False # Esconde a modal quando o tempo acaba
             return # Mantém o jogo pausado enquanto a modal estiver sumindo
         
-        # Lógica da modal de vitória temporizada (fecha após 3 segundos)
+        # Lógica da modal de vitória temporizada
         if self.jogo_vencido:
             self.vitoria_timer -= 1
             if self.vitoria_timer <= 0:
@@ -237,8 +283,9 @@ class Jogo:
                     if self.texto_1 in ("", "-"): self.texto_1 = "0"
                     if self.texto_2 in ("", "-"): self.texto_2 = "0"
                     
-                    self.reta1.a = int(self.texto_1)
-                    self.reta1.b = int(self.texto_2)
+                    a = self.converter_numero(self.texto_1)
+                    b = self.converter_numero(self.texto_2)
+                    self.reta1 = Reta(a, b)
                     
                     # Verifica se coletou estrela nesta jogada
                     pegou_estrela = self.verificar_todas_colisoes()
@@ -286,7 +333,8 @@ class Jogo:
         pyxel.cls(0)
         
         self.plano.desenhar()
-        self.reta1.desenhar()
+        if self.reta1 is not None: # Verifica se a reta já existe
+            self.reta1.desenhar()
         
         for estrela in self.estrelas:
             estrela.desenhar()
