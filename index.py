@@ -83,9 +83,32 @@ class Estrela:
     def desenhar(self):
         if not self.coletada:
             tela_x, tela_y = self.converter_coordenada()
+            #Ponta de cima
+            pyxel.tri(tela_x, tela_y -9,
+                      tela_x +5, tela_y +2,
+                      tela_x -5, tela_y +2, 10)
 
-            pyxel.blt(
-                tela_x,
+            #Ponta da direita
+            pyxel.tri(tela_x +9, tela_y,
+                      tela_x -2, tela_y +5,
+                      tela_x -2, tela_y -5, 10)
+
+            #Ponta pra baixo
+            pyxel.tri(tela_x , tela_y +9,
+                      tela_x +5, tela_y -2,
+                      tela_x -5, tela_y -2, 10)
+
+            #Ponta da esquerda
+            pyxel.tri(tela_x -9, tela_y,
+                      tela_x +2, tela_y +5,
+                      tela_x +2, tela_y -5, 10)
+
+            #O centro
+            pyxel.circ(tela_x, tela_y, 4, 10)
+
+            
+            '''pyxel.blt(
+                   tela_x,
                 tela_y,
                 0,              # Banco de imagens
                 self.sprite_x,
@@ -93,7 +116,7 @@ class Estrela:
                 self.largura,
                 self.altura,
                 self.cor        # cor transparente
-            )
+            )'''
 
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
@@ -209,7 +232,7 @@ class Jogo:
             posicoes.append((x, y))
 
         #Carregar imagem
-        pyxel.images[0].load(0, 0,"estrelas.png")  
+        '''pyxel.images[0].load(0, 0,"estrelas.png" )'''  
 
         pyxel.run(self.update, self.draw)
 
