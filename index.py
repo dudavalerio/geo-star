@@ -169,7 +169,7 @@ class Jogo:
         pyxel.sounds[0].set("c3e3g3c4", "s", "7", "n", 10) 
         
         # Som 1: Estrela coletada (Subi para G4 e C5. Coisas boas em jogos soam melhor agudas)
-        pyxel.sounds[1].set("g4c5", "p", "7", "n", 8)        
+        pyxel.sounds[1].set("g4c4", "p", "7", "n", 8)        
         
         # Som 2: Tentativa errada (Sua ideia estava ótima! C4 em Triangle wave)
         pyxel.sounds[2].set("c4", "t", "4", "f", 12)        
@@ -179,7 +179,7 @@ class Jogo:
         
         # Som 4: Vitória (Subi a sua ideia para a oitava 3 e 4, para soar como uma verdadeira fanfarra de vitória)
         pyxel.sounds[4].set("c3e3g3c4", "s", "7", "n", 10)
-        
+
         self.estado = "TELA_INICIAL"
         self.tela_inicial = TelaInicial()
         
@@ -352,7 +352,7 @@ class Jogo:
         pyxel.text(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""), 7)
         
         pyxel.mouse(True)
-        
+     
         if self.mostrar_modal and self.modal is not None:
             self.modal.desenhar()
         
@@ -361,5 +361,4 @@ class Jogo:
             
         if self.jogo_vencido and self.modal_vitoria is not None:
             self.modal_vitoria.desenhar()
-         
 Jogo()
