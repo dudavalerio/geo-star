@@ -162,14 +162,24 @@ class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
 
-        # Configuração dos Sons do Pyxel (Canal 0 ao 4)
-        # Sintaxe: set(notas, tom, volume, efeito, velocidade)
-        pyxel.sound(0).set("c3e3g3c4", "p", "7", "n", 10)  # Som 0: Início / Menu
-        pyxel.sound(1).set("g4c5", "s", "7", "n", 8)        # Som 1: Estrela coletada
-        pyxel.sound(2).set("c2", "n", "5", "f", 12)        # Som 2: Tentativa errada
-        pyxel.sound(3).set("g3d3a2", "t", "7", "f", 20)    # Som 3: Game Over
-        pyxel.sound(4).set("c4e4g4c5", "p", "7", "n", 10)  # Som 4: Vitória
-
+       # Configuração dos Sons do Pyxel (Canal 0 ao 4)
+        # SINTAXE CORRETA: pyxel.sounds[indice] (com colchetes)
+        
+        # Som 0: Início / Menu (Subi a última nota para C4 para dar um tom de "abertura", C2 era muito brusco)
+        pyxel.sounds[0].set("c3e3g3c4", "s", "7", "n", 10) 
+        
+        # Som 1: Estrela coletada (Subi para G4 e C5. Coisas boas em jogos soam melhor agudas)
+        pyxel.sounds[1].set("g4c5", "p", "7", "n", 8)        
+        
+        # Som 2: Tentativa errada (Sua ideia estava ótima! C4 em Triangle wave)
+        pyxel.sounds[2].set("c4", "t", "4", "f", 12)        
+        
+        # Som 3: Game Over (Troquei de "n" para "t" para você conseguir ouvir a melodia grave e triste que você criou)
+        pyxel.sounds[3].set("g3d3a2", "t", "7", "f", 20)    
+        
+        # Som 4: Vitória (Subi a sua ideia para a oitava 3 e 4, para soar como uma verdadeira fanfarra de vitória)
+        pyxel.sounds[4].set("c3e3g3c4", "s", "7", "n", 10)
+        
         self.estado = "TELA_INICIAL"
         self.tela_inicial = TelaInicial()
         
