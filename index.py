@@ -6,8 +6,14 @@ class TelaInicial:
     def __init__(self):
         self.titulo_completo = "BEM VINDO AO GEO-STAR"
         self.titulo_atual = ""
+        self.som_tocado = False  # Controle para tocar apenas uma vez
 
     def update(self):
+        # Toca o som no momento em que a animação da frase começa
+        if not self.som_tocado:
+            pyxel.play(0, 0)  # Toca o som de início/menu (oitavas de 0 a 4)
+            self.som_tocado = True
+
         if len(self.titulo_atual) < len(self.titulo_completo):
             if pyxel.frame_count % 2 == 0:
                 self.titulo_atual += self.titulo_completo[len(self.titulo_atual)]
@@ -16,7 +22,6 @@ class TelaInicial:
             if len(self.titulo_atual) < len(self.titulo_completo):
                 self.titulo_atual = self.titulo_completo
             else:
-                pyxel.play(0, 0)  # Toca som especial de boas-vindas na tela inicial
                 return "JOGANDO"
                 
         return "TELA_INICIAL"
@@ -28,23 +33,6 @@ class TelaInicial:
         if len(self.titulo_atual) == len(self.titulo_completo):
             if (pyxel.frame_count // 15) % 2 == 0:
                 pyxel.text(100, 160, "Pressione ENTER para continuar", 13)
-
-class ModalColeta:
-    def __init__(self, estrela):
-        self.estrela = estrela
-    
-    def desenhar(self):
-        for y in range(0, 300, 2):
-            for x in range(0, 400, 2):
-                pyxel.pset(x, y, 0)
-                pyxel.pset(x + 1, y + 1, 0)
-        
-        pyxel.rect(104, 114, 200, 50, 0)
-        pyxel.rect(100, 110, 200, 50, 11)
-        pyxel.rectb(100, 110, 200, 50, 7)
-        
-        pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 0)
-
 class ModalFimJogo:
     def desenhar(self):
         for y in range(0, 300, 2):
