@@ -16,7 +16,7 @@ class TelaInicial:
             if len(self.titulo_atual) < len(self.titulo_completo):
                 self.titulo_atual = self.titulo_completo
             else:
-                pyxel.play(0, 0)  # Toca o som de boas-vindas no canal 0
+                pyxel.play(0, 0)  # Toca som especial de boas-vindas na tela inicial
                 return "JOGANDO"
                 
         return "TELA_INICIAL"
@@ -162,15 +162,28 @@ class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
 
-        # Configuração correta dos sons do Pyxel
-        pyxel.sounds[0].set("c3 e3 g3 c4", "p", "7642", "n", 12)  # Som 0: Boas-vindas (Arpejo C Maior)
-        pyxel.sounds[1].set("g4c4", "s", "7", "n", 8)         # Som 1: Estrela coletada
-        pyxel.sounds[2].set("c2", "n", "5", "f", 12)          # Som 2: Tentativa errada
-        pyxel.sounds[3].set("g3d3a2", "t", "7", "f", 20)      # Som 3: Game Over
-        pyxel.sounds[4].set("c3e3g3c4", "p", "7", "n", 10)    # Som 4: Vitória
+        # Configuração de Efeitos Sonoros Modernos e Animados (Pyxel)
+        # Som 0: Boas-vindas na Tela Inicial (Arpejo brilhante e rápido)
+        pyxel.sounds[0].set("c3e3g3c4e4g4c5", "p", "7", "s", 6)  
+        
+        # Som 1: Início do Jogo / Transição (Efeito power-up de decolagem de nave)
+        pyxel.sounds[1].set("c2g2c3g3c4", "p", "7", "s", 4)  
+        
+        # Som 2: Estrela Coletada (Item apanhado / Brilho rápido)
+        pyxel.sounds[2].set("c4g4c5e5", "s", "7", "n", 3)        
+        
+        # Som 3: Tentativa Errada (Falha / Ruído seco e grave)
+        pyxel.sounds[3].set("g2c2", "n", "6", "f", 8)        
+        
+        # Som 4: Game Over (Queda dramática e metálica)
+        pyxel.sounds[4].set("g3f3d3c3a2", "t", "7", "f", 12)    
+        
+        # Som 5: Vitória (Fanfarra espacial festiva)
+        pyxel.sounds[5].set("c3g3c4e4g4c5", "p", "7", "n", 6)  
 
         self.estado = "TELA_INICIAL"
         self.tela_inicial = TelaInicial()
+        self.som_inicio_tocado = False  # Flag para tocar o som de início só uma vez
         
         self.texto_1 = "1"  
         self.texto_2 = "3"  
@@ -215,6 +228,11 @@ class Jogo:
             if proximo_estado == "JOGANDO":
                 self.estado = "JOGANDO"
             return
+
+        # Toca o som de início do jogo assim que sai da tela inicial (apenas uma vez)
+        if self.estado == "JOGANDO" and not self.som_inicio_tocado:
+            pyxel.play(0, 1)  # Toca o som de decolagem/início
+            self.som_inicio_tocado = True
 
         if self.mostrar_modal:
             self.modal_timer -= 1    
@@ -263,21 +281,23 @@ class Jogo:
                     
                     pegou_estrela = self.verificar_todas_colisoes()
                     
+                    # Checa condição de vitória
                     if all(e.coletada for e in self.estrelas):
                         self.jogo_vencido = True
                         self.modal_vitoria = ModalVitoria(self.quant_estrelas, self.tentativas_restantes)
                         self.vitoria_timer = 180  
-                        pyxel.play(0, 4)  
+                        pyxel.play(0, 5)  # Toca som de vitória
                     
+                    # Se submeteu e NÃO pegou estrela, desconta tentativa e toca som de erro
                     if not pegou_estrela and not self.jogo_vencido:
                         self.tentativas_restantes -= 1
-                        pyxel.play(0, 2)  
+                        pyxel.play(0, 3)  # Toca som de erro
                         
                         if self.tentativas_restantes <= 0:
                             self.jogo_encerrado = True
                             self.modal_fim = ModalFimJogo()  
                             self.fim_timer = 180  
-                            pyxel.play(0, 3)  
+                            pyxel.play(0, 4)  # Toca som de Game Over
 
                     self.mudou_valores = False
 
@@ -304,7 +324,7 @@ class Jogo:
                     self.mostrar_modal = True
                     self.modal_timer = 120  
                     colidiu_agora = True
-                    pyxel.play(0, 1)  
+                    pyxel.play(0, 2)  # Toca som de estrela coletada
                     print(f"⭐ Estrela na coordenada ({estrela.x}, {estrela.y}) capturada!")
                     
         return colidiu_agora
@@ -348,5 +368,5 @@ class Jogo:
             
         if self.jogo_vencido and self.modal_vitoria is not None:
             self.modal_vitoria.desenhar()
-
+         
 Jogo()
