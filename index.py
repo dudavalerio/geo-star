@@ -1,5 +1,5 @@
 import math
-import pyxel # pyright: ignore[reportMissingImports]
+import pyxel
 import random
 
 class TelaInicial:
