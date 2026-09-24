@@ -16,7 +16,7 @@ class TelaInicial:
             if len(self.titulo_atual) < len(self.titulo_completo):
                 self.titulo_atual = self.titulo_completo
             else:
-                pyxel.play(0, 0)  # Toca som de início/menu
+                pyxel.play(0, 0)  # Toca o som de boas-vindas no canal 0
                 return "JOGANDO"
                 
         return "TELA_INICIAL"
@@ -162,12 +162,12 @@ class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
 
-       # Configuração atualizada dos Sons do Pyxel usando pyxel.sounds[...]
-        pyxel.sounds[0].set("c3e3g3c4", "p", "7", "n", 10)  # Som 0: Início / Menu
-        pyxel.sounds[1].set("g4c4", "s", "7", "n", 8)        # Som 1: Estrela coletada (c4 em vez de c5)
-        pyxel.sounds[2].set("c2", "n", "5", "f", 12)        # Som 2: Tentativa errada
-        pyxel.sounds[3].set("g3d3a2", "t", "7", "f", 20)    # Som 3: Game Over
-        pyxel.sounds[4].set("c3e3g3c4", "p", "7", "n", 10)  # Som 4: Vitória
+        # Configuração correta dos sons do Pyxel
+        pyxel.sounds[0].set("c3 e3 g3 c4", "p", "7642", "n", 12)  # Som 0: Boas-vindas (Arpejo C Maior)
+        pyxel.sounds[1].set("g4c4", "s", "7", "n", 8)         # Som 1: Estrela coletada
+        pyxel.sounds[2].set("c2", "n", "5", "f", 12)          # Som 2: Tentativa errada
+        pyxel.sounds[3].set("g3d3a2", "t", "7", "f", 20)      # Som 3: Game Over
+        pyxel.sounds[4].set("c3e3g3c4", "p", "7", "n", 10)    # Som 4: Vitória
 
         self.estado = "TELA_INICIAL"
         self.tela_inicial = TelaInicial()
@@ -263,23 +263,21 @@ class Jogo:
                     
                     pegou_estrela = self.verificar_todas_colisoes()
                     
-                    # Checa condição de vitória
                     if all(e.coletada for e in self.estrelas):
                         self.jogo_vencido = True
                         self.modal_vitoria = ModalVitoria(self.quant_estrelas, self.tentativas_restantes)
                         self.vitoria_timer = 180  
-                        pyxel.play(0, 4)  # Toca som de vitória
+                        pyxel.play(0, 4)  
                     
-                    # Se submeteu e NÃO pegou estrela, desconta tentativa e toca som de erro
                     if not pegou_estrela and not self.jogo_vencido:
                         self.tentativas_restantes -= 1
-                        pyxel.play(0, 2)  # Toca som de erro/tentativa perdida
+                        pyxel.play(0, 2)  
                         
                         if self.tentativas_restantes <= 0:
                             self.jogo_encerrado = True
                             self.modal_fim = ModalFimJogo()  
                             self.fim_timer = 180  
-                            pyxel.play(0, 3)  # Toca som de Game Over
+                            pyxel.play(0, 3)  
 
                     self.mudou_valores = False
 
@@ -306,7 +304,7 @@ class Jogo:
                     self.mostrar_modal = True
                     self.modal_timer = 120  
                     colidiu_agora = True
-                    pyxel.play(0, 1)  # Toca som de estrela coletada
+                    pyxel.play(0, 1)  
                     print(f"⭐ Estrela na coordenada ({estrela.x}, {estrela.y}) capturada!")
                     
         return colidiu_agora
@@ -350,5 +348,5 @@ class Jogo:
             
         if self.jogo_vencido and self.modal_vitoria is not None:
             self.modal_vitoria.desenhar()
-         
+
 Jogo()
