@@ -164,7 +164,7 @@ class Jogo:
 
         # Configuração de Efeitos Sonoros Modernos e Animados (Pyxel)
         # Som 0: Boas-vindas na Tela Inicial (Arpejo brilhante e rápido)
-        pyxel.sounds[0].set("c3e3g3c4e4g4c5", "p", "7", "s", 6)  
+        pyxel.sounds[0].set("c3e3g3c4e4g4c4", "p", "7", "s", 6)  
         
         # Som 1: Início do Jogo / Transição (Efeito power-up de decolagem de nave)
         pyxel.sounds[1].set("c2g2c3g3c4", "p", "7", "s", 4)  
@@ -179,7 +179,7 @@ class Jogo:
         pyxel.sounds[4].set("g3f3d3c3a2", "t", "7", "f", 12)    
         
         # Som 5: Vitória (Fanfarra espacial festiva)
-        pyxel.sounds[5].set("c3g3c4e4g4c5", "p", "7", "n", 6)  
+        pyxel.sounds[5].set("c3g3c4e4g4c4", "p", "7", "n", 6)  
 
         self.estado = "TELA_INICIAL"
         self.tela_inicial = TelaInicial()
