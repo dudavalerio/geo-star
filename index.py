@@ -150,14 +150,20 @@ class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
 
-        # Configuração de Efeitos Sonoros Modernos e Animados (Oitavas de 0 a 4)
-        pyxel.sounds[0].set("c3e3g3c4e4g4c4", "p", "7", "s", 6)  # Som 0: Boas-vindas
-        pyxel.sounds[1].set("c2g2c3g3c4", "p", "7", "s", 4)      # Som 1: Início do Jogo
-        pyxel.sounds[2].set("c4g4c4e4", "s", "7", "n", 3)        # Som 2: Estrela Coletada
-        pyxel.sounds[3].set("g2c2", "n", "6", "f", 8)            # Som 3: Tentativa Errada
-        pyxel.sounds[4].set("g3f3d3c3a2", "t", "7", "f", 12)    # Som 4: Game Over
-        pyxel.sounds[5].set("c3g3c4e4g4c4", "p", "7", "n", 6)  # Som 5: Vitória
-
+        # Som 0: Mudança de Tela / Jogo Carregado (Estilo "Power-up" espacial ascendente)
+        pyxel.sounds[0].set("g2c2", "n", "6", "f", 8)
+        
+        # Som 1: Estrela Coletada (Efeito rápido e brilhante tipo "Laser/Item")
+        pyxel.sounds[1].set("c4g4c4e4", "s", "7", "n", 3)        
+        
+        # Som 2: Tentativa Errada (Efeito de falha/erro com ruído curto e grave)
+        pyxel.sounds[2].set("g2c2", "n", "6", "f", 8)        
+        
+        # Som 3: Game Over (Queda dramática e metálica)
+        pyxel.sounds[3].set("g3f3d3c3a2", "t", "7", "f", 12)    
+        
+        # Som 4: Vitória (Fanfrra espacial animada e festiva)
+        pyxel.sounds[4].set("c3g3c4e4g4c4", "p", "7", "n", 6)
         self.estado = "TELA_INICIAL"
         self.tela_inicial = TelaInicial()
         self.som_inicio_tocado = False  
