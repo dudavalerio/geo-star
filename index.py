@@ -28,10 +28,12 @@ class TelaInicial:
         if len(self.titulo_atual) == len(self.titulo_completo):
             if (pyxel.frame_count // 15) % 2 == 0:
                 pyxel.text(100, 160, "           Pressione ENTER para continuar", 13)
+from fractions import Fraction
 
 class ModalColeta:
     def __init__(self, estrela):
         self.estrela = estrela
+
     
     def desenhar(self):
         for y in range(0, 300, 2):
@@ -43,8 +45,16 @@ class ModalColeta:
         pyxel.rect(100, 110, 200, 50, 11)
         pyxel.rectb(100, 110, 200, 50, 7)
         
-        pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 0)
+        # 1. Carregando uma fonte no formato BDF (não requer definição de tamanho)
+        #font_bdf = pyxel.Font("assets/minha_fonte.bdf")
 
+        # 2. Carregando uma fonte TrueType (.ttf) especificando o tamanho (ex: 12)
+        #font_ttf = pyxel.Font("assets/PixelMplus12-Regular.ttf", 12)
+        
+        # Texto da modal
+        #pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 7, fonte_bdf)
+        pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 7)
+        
 class ModalFimJogo:
     def desenhar(self):
         for y in range(0, 300, 2):
@@ -80,21 +90,47 @@ class ModalVitoria:
         pyxel.text(110, 155, f"Tentativas restantes: {self.tentativas_restantes}", 7)
 
 class Estrela:
-    def __init__(self, x, y):
+    def __init__(self, x, y, largura, altura, cor, sprite_x, sprite_y):
         self.x = x
         self.y = y
+        self.largura=largura
+        self.altura=altura
+
+        self.sprite_x = sprite_x,
+        self.sprite_y = sprite_y,
+
+
+        self.cor = cor
         self.coletada = False
+        
 
     def desenhar(self):
         if not self.coletada:
             tela_x, tela_y = self.converter_coordenada()
-            pyxel.text(tela_x, tela_y, '*', 7)
+            pyxel.tri(tela_x, tela_y -9,
+                      tela_x +5, tela_y +2,
+                      tela_x -5, tela_y +2, 10)
+
+            pyxel.tri(tela_x +9, tela_y,
+                      tela_x -2, tela_y +5,
+                      tela_x -2, tela_y -5, 10)
+
+            pyxel.tri(tela_x , tela_y +9,
+                      tela_x +5, tela_y -2,
+                      tela_x -5, tela_y -2, 10)
+
+            pyxel.tri(tela_x -9, tela_y,
+                      tela_x +2, tela_y +5,
+                      tela_x +2, tela_y -5, 10)
+
+            pyxel.circ(tela_x, tela_y, 4, 10)
 
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
         tela_y = 170 - self.y * 20
         return tela_x, tela_y
 
+    
 class Reta:
     def __init__(self, a, b):
         self.a = a
@@ -109,8 +145,9 @@ class Reta:
 
         for x in range(-10, 11):
             y = self.calcular_y(x)
-            tela_x = 200 + x * 20
-            tela_y = 150 - y * 20
+
+            tela_x = 200 + (x) * 20
+            tela_y = 150 - (y) * 20
 
             if anterior_x is not None:
                 pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
@@ -123,6 +160,7 @@ class Plano:
         pyxel.mouse(True)
 
     def desenhar(self):
+        #Linhas que cortam o plano
         for x in range(-7, 8):
             tela_x = 250 + x * 20
             pyxel.line(tela_x, 40, tela_x, 300, 1)
@@ -131,9 +169,11 @@ class Plano:
             tela_y = 170 - y * 20
             pyxel.line(100, tela_y, 400, tela_y, 1)
             
+        #Linhas X e Y
         pyxel.line(100, 170, 400, 170, 7)
         pyxel.line(250, 40, 250, 300, 7)
             
+        #Números em X e Y
         for x in range(-7, 8):
             if x != 0:
                 tela_x = 250 + x * 20
@@ -155,8 +195,10 @@ class Plano:
         cartesian_x = round((mouse_tela_x - centro_grade_x) / 20)
         cartesian_y = round((centro_grade_y - mouse_tela_y) / 20)
         
-        texto_coordenadas = f"X: {cartesian_x}, Y: {cartesian_y}"
-        pyxel.text(mouse_tela_x + 10, mouse_tela_y + 10, texto_coordenadas, 7)
+        texto_coordenadas = f"X: {cartesian_x}, Y: {cartesian_y}" # Coordenadas do cursor
+        
+        if mouse_tela_x >80 and mouse_tela_y > 20:
+            pyxel.text(mouse_tela_x + 10, mouse_tela_y + 10, texto_coordenadas, 7)
 
 class Jogo:
     def __init__(self):
@@ -175,7 +217,7 @@ class Jogo:
         self.modal_timer = 0  
         
         self.plano = Plano()
-        self.reta1 = Reta(1, 3)
+        self.reta1 = None # Reta não aparece inicialmente
         
         self.quant_estrelas = random.randint(4, 8)
         self.tentativas_restantes = self.quant_estrelas * 2
@@ -196,11 +238,37 @@ class Jogo:
             while (x, y) in posicoes:
                 x = random.randint(-7, 7)
                 y = random.randint(-6, 6)
-            estrela = Estrela(x, y)
+            sprite_x = random.choice([0, 16, 32, 48, 64])
+            sprite_y = 0
+            estrela = Estrela(x, y,14,18,7, sprite_x, sprite_y)
             self.estrelas.append(estrela)
-            posicoes.append((x, y))      
+            posicoes.append((x, y))
+
+        #Carregar imagem
+        '''pyxel.images[0].load(0, 0,"estrelas.png" )'''  
 
         pyxel.run(self.update, self.draw)
+
+    def converter_numero(self, texto):
+        texto = texto.strip()
+
+        # Fração
+        if "/" in texto:
+            partes = texto.split("/") #cria um array com os indices antes da bara e depois da barra
+
+            if len(partes) != 2:
+                raise ValueError
+
+            numerador = float(partes[0])
+            denominador = float(partes[1])
+
+            if denominador == 0:
+                raise ValueError
+
+            return numerador / denominador
+
+        # Número inteiro ou decimal
+        return float(texto)
     
     def update(self):
         # 1. Gerencia se está na Tela Inicial
@@ -217,7 +285,7 @@ class Jogo:
                 self.mostrar_modal = False 
             return 
         
-        # 3. Lógica da modal de vitória
+        # Lógica da modal de vitória temporizada
         if self.jogo_vencido:
             self.vitoria_timer -= 1
             if self.vitoria_timer <= 0:
@@ -257,8 +325,9 @@ class Jogo:
                     if self.texto_1 in ("", "-"): self.texto_1 = "0"
                     if self.texto_2 in ("", "-"): self.texto_2 = "0"
                     
-                    self.reta1.a = int(self.texto_1)
-                    self.reta1.b = int(self.texto_2)
+                    a = self.converter_numero(self.texto_1)
+                    b = self.converter_numero(self.texto_2)
+                    self.reta1 = Reta(a, b)
                     
                     # Verifica colisões
                     pegou_estrela = self.verificar_todas_colisoes()
@@ -317,7 +386,8 @@ class Jogo:
         
         # Desenho do jogo normal
         self.plano.desenhar()
-        self.reta1.desenhar()
+        if self.reta1 is not None: # Verifica se a reta já existe
+            self.reta1.desenhar()
         
         for estrela in self.estrelas:
             estrela.desenhar()
@@ -325,11 +395,11 @@ class Jogo:
         pyxel.text(239, 10, 'GeoStar', 10)
         pyxel.text(10, 95, f"Tentativas Restantes: {self.tentativas_restantes}", 8 if self.tentativas_restantes <= 2 else 7)
         
-        pyxel.text(10, 10, "Valor de 'a' (inclinacao):", 7)
+        pyxel.text(10, 10, "Valor de 'a' (inclinação):", 7)
         cor_borda_a = 11 if self.foco_input == "a" else 5  
         pyxel.rectb(8, 22, 70, 20, cor_borda_a)
         
-        pyxel.text(10, 52, "Valor de 'b' (intercepto Y):", 7)
+        pyxel.text(10, 52, "Valor de 'b' (interseção Y):", 7)
         cor_borda_b = 11 if self.foco_input == "b" else 5  
         pyxel.rectb(8, 62, 70, 20, cor_borda_b)
         
