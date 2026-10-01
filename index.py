@@ -419,7 +419,8 @@ class Jogo:
 
     def draw(self):
         pyxel.cls(0)
-        
+
+     
         # Se estiver na tela inicial, desenha apenas ela e sai
         if self.estado == "TELA_INICIAL":
             self.tela_inicial.draw()
