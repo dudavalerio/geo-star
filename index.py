@@ -6,6 +6,7 @@ from fractions import Fraction
 class ModalColeta:
     def __init__(self, estrela):
         self.estrela = estrela
+
     
     def desenhar(self):
         # Efeito de sombra/overlay, varre a tela pulando pixels para criar uma cortina semitransparente escura
@@ -19,8 +20,15 @@ class ModalColeta:
         pyxel.rect(100, 110, 200, 50, 11)   # Caixa verde
         pyxel.rectb(100, 110, 200, 50, 7)   # Borda branca da caixa
         
+        # 1. Carregando uma fonte no formato BDF (não requer definição de tamanho)
+        #font_bdf = pyxel.Font("assets/minha_fonte.bdf")
+
+        # 2. Carregando uma fonte TrueType (.ttf) especificando o tamanho (ex: 12)
+        #font_ttf = pyxel.Font("assets/PixelMplus12-Regular.ttf", 12)
+        
         # Texto da modal
-        pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 0)
+        #pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 7, fonte_bdf)
+        pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 7)
         
 class ModalFimJogo:
     def desenhar(self):
@@ -141,6 +149,7 @@ class Plano:
         pyxel.mouse(True)
 
     def desenhar(self):
+        #Linhas que cortam o plano
         for x in range(-7, 8):
             tela_x = 250 + x * 20
             pyxel.line(tela_x, 40, tela_x, 300, 1)
@@ -149,9 +158,11 @@ class Plano:
             tela_y = 170 - y * 20
             pyxel.line(100, tela_y, 400, tela_y, 1)
             
+        #Linhas X e Y
         pyxel.line(100, 170, 400, 170, 7)
         pyxel.line(250, 40, 250, 300, 7)
             
+        #Números em X e Y
         for x in range(-7, 8):
             if x != 0:
                 tela_x = 250 + x * 20
@@ -173,8 +184,10 @@ class Plano:
         cartesian_x = round((mouse_tela_x - centro_grade_x) / 20)
         cartesian_y = round((centro_grade_y - mouse_tela_y) / 20)
         
-        texto_coordenadas = f"X: {cartesian_x}, Y: {cartesian_y}"
-        pyxel.text(mouse_tela_x + 10, mouse_tela_y + 10, texto_coordenadas, 7)
+        texto_coordenadas = f"X: {cartesian_x}, Y: {cartesian_y}" # Coordenadas do cursor
+        
+        if mouse_tela_x >80 and mouse_tela_y > 20:
+            pyxel.text(mouse_tela_x + 10, mouse_tela_y + 10, texto_coordenadas, 7)
 
 class Jogo:
     def __init__(self):
@@ -353,11 +366,11 @@ class Jogo:
         pyxel.text(239, 10, 'GeoStar', 10)
         pyxel.text(10, 95, f"Tentativas Restantes: {self.tentativas_restantes}", 8 if self.tentativas_restantes <= 2 else 7)
         
-        pyxel.text(10, 10, "Valor de 'a' (inclinacao):", 7)
+        pyxel.text(10, 10, "Valor de 'a' (inclinação):", 7)
         cor_borda_a = 11 if self.foco_input == "a" else 5  
         pyxel.rectb(8, 22, 70, 20, cor_borda_a)
         
-        pyxel.text(10, 52, "Valor de 'b' (intercepto Y):", 7)
+        pyxel.text(10, 52, "Valor de 'b' (interseção Y):", 7)
         cor_borda_b = 11 if self.foco_input == "b" else 5  
         pyxel.rectb(8, 62, 70, 20, cor_borda_b)
         
