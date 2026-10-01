@@ -1,11 +1,19 @@
 import math
 import pyxel
 import random
+from fractions import Fraction
 
 class TelaInicial:
     def __init__(self):
         self.titulo_completo = "         BEM VINDO AO GEO-STAR"
         self.titulo_atual = ""
+        self.instrucoes = """Instruções do Jogo:
+
+O jogo tem como objetivo capturar estrelas no plano através da equação da reta y= ax+b.
+
+Para iniciar o jogo digite um valor para “a“ e um valor para “b“ afim de coletar uma
+das estrelas no plano, com base nesses valores a reta será projeta sobre o plano para realizar
+a coleta."""
         self.som_tocado = False  # Controle para tocar apenas uma vez
 
     def update(self):
@@ -28,13 +36,14 @@ class TelaInicial:
 
     def draw(self):
         pyxel.cls(0)
-        pyxel.text(120, 130, self.titulo_atual, 7)
+        pyxel.text(120, 100, self.titulo_atual, 7)
         
         # Mostra o aviso de pressionar ENTER apenas quando terminar de digitar
         if len(self.titulo_atual) == len(self.titulo_completo):
+            pyxel.text(10, 150, self.instrucoes, 7)
             if (pyxel.frame_count // 15) % 2 == 0:
-                pyxel.text(100, 160, "           Pressione ENTER para continuar", 13)
-from fractions import Fraction
+                pyxel.text(100, 200, "           Pressione ENTER para continuar", 13)
+            
 
 class ModalColeta:
     def __init__(self, estrela):
@@ -303,6 +312,7 @@ class Jogo:
         if self.estado == "TELA_INICIAL":
             proximo_estado = self.tela_inicial.update()
             if proximo_estado == "JOGANDO":
+                self.jogo_encerrado = False
                 self.estado = "JOGANDO"
             return
 
@@ -327,7 +337,8 @@ class Jogo:
         if self.jogo_encerrado:
             self.fim_timer -= 1      
             if self.fim_timer <= 0:
-                pyxel.quit()        
+                self.estado = "TELA_INICIAL"
+                #pyxel.quit()        
             return
 
         # 5. Entrada de dados via teclado
