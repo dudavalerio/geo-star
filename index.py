@@ -106,18 +106,6 @@ class Estrela:
             #O centro
             pyxel.circ(tela_x, tela_y, 4, 10)
 
-            
-            '''pyxel.blt(
-                   tela_x,
-                tela_y,
-                0,              # Banco de imagens
-                self.sprite_x,
-                self.sprite_y,              # posição da imagem dentro do banco
-                self.largura,
-                self.altura,
-                self.cor        # cor transparente
-            )'''
-
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
         tela_y = 170 - self.y * 20
