@@ -301,7 +301,7 @@ class Jogo:
                 
                 if distancia <= 0.3:
                     estrela.coletada = True
-                    self.modal = ModalColeta(estrela) 
+                    # self.modal = ModalColeta(estrela) 
                     self.mostrar_modal = True
                     self.modal_timer = 120  
                     colidiu_agora = True
