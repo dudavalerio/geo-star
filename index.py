@@ -4,7 +4,7 @@ import random
 
 class TelaInicial:
     def __init__(self):
-        self.titulo_completo = "BEM VINDO AO GEO-STAR"
+        self.titulo_completo = "         BEM VINDO AO GEO-STAR"
         self.titulo_atual = ""
         self.som_tocado = False  # Controle para tocar apenas uma vez
 
@@ -29,6 +29,11 @@ class TelaInicial:
     def draw(self):
         pyxel.cls(0)
         pyxel.text(120, 130, self.titulo_atual, 7)
+        
+        # Mostra o aviso de pressionar ENTER apenas quando terminar de digitar
+        if len(self.titulo_atual) == len(self.titulo_completo):
+            if (pyxel.frame_count // 15) % 2 == 0:
+                pyxel.text(100, 160, "           Pressione ENTER para continuar", 13)
 from fractions import Fraction
 
 class ModalColeta:
@@ -37,16 +42,14 @@ class ModalColeta:
 
     
     def desenhar(self):
-        # Efeito de sombra/overlay, varre a tela pulando pixels para criar uma cortina semitransparente escura
         for y in range(0, 300, 2):
             for x in range(0, 400, 2):
-                pyxel.pset(x, y, 0)       # Pixels pretos intercalados
+                pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
         
-        # Retãngulo sobreposto a tela, simulando uma modal
-        pyxel.rect(104, 114, 200, 50, 0)  # Retângulo preto ao fundo para dar profundidade
-        pyxel.rect(100, 110, 200, 50, 11)   # Caixa verde
-        pyxel.rectb(100, 110, 200, 50, 7)   # Borda branca da caixa
+        pyxel.rect(104, 114, 200, 50, 0)
+        pyxel.rect(100, 110, 200, 50, 11)
+        pyxel.rectb(100, 110, 200, 50, 7)
         
         # 1. Carregando uma fonte no formato BDF (não requer definição de tamanho)
         #font_bdf = pyxel.Font("assets/minha_fonte.bdf")
@@ -210,6 +213,9 @@ class Jogo:
     def __init__(self):
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
 
+        self.estado = "TELA_INICIAL"
+        self.tela_inicial = TelaInicial()
+        
         # Som 0: Boas-vindas / Tela Inicial 
         pyxel.sounds[0].set("c3c3c3c3c3c4c2c3", "s", "5", "f", 15)
         
@@ -293,6 +299,7 @@ class Jogo:
         return float(texto)
     
     def update(self):
+        # 1. Gerencia se está na Tela Inicial
         if self.estado == "TELA_INICIAL":
             proximo_estado = self.tela_inicial.update()
             if proximo_estado == "JOGANDO":
@@ -316,12 +323,14 @@ class Jogo:
                 pyxel.quit()  
             return
         
+        # 4. Lógica de fim de jogo (derrota)
         if self.jogo_encerrado:
             self.fim_timer -= 1      
             if self.fim_timer <= 0:
                 pyxel.quit()        
             return
 
+        # 5. Entrada de dados via teclado
         caracteres_digitados = pyxel.input_text
         for caractere in caracteres_digitados:
             if caractere.isdigit() or caractere in ('-', '.', '/'):
@@ -340,6 +349,7 @@ class Jogo:
                 self.texto_2 = self.texto_2[:-1]
                 self.mudou_valores = True
                 
+        # 6. Processamento ao apertar ENTER
         if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
             if self.mudou_valores:
                 try:
@@ -401,10 +411,12 @@ class Jogo:
     def draw(self):
         pyxel.cls(0)
         
+        # Se estiver na tela inicial, desenha apenas ela e sai
         if self.estado == "TELA_INICIAL":
             self.tela_inicial.draw()
             return
         
+        # Desenho do jogo normal
         self.plano.desenhar()
         if self.reta1 is not None: # Verifica se a reta já existe
             self.reta1.desenhar()
@@ -430,6 +442,7 @@ class Jogo:
         
         pyxel.mouse(True)
         
+        # Telas de sobreposição (modais)
         if self.mostrar_modal and self.modal is not None:
             self.modal.desenhar()
         
