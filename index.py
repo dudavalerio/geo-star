@@ -91,27 +91,22 @@ class Estrela:
     def desenhar(self):
         if not self.coletada:
             tela_x, tela_y = self.converter_coordenada()
-            #Ponta de cima
             pyxel.tri(tela_x, tela_y -9,
                       tela_x +5, tela_y +2,
                       tela_x -5, tela_y +2, 10)
 
-            #Ponta da direita
             pyxel.tri(tela_x +9, tela_y,
                       tela_x -2, tela_y +5,
                       tela_x -2, tela_y -5, 10)
 
-            #Ponta pra baixo
             pyxel.tri(tela_x , tela_y +9,
                       tela_x +5, tela_y -2,
                       tela_x -5, tela_y -2, 10)
 
-            #Ponta da esquerda
             pyxel.tri(tela_x -9, tela_y,
                       tela_x +2, tela_y +5,
                       tela_x +2, tela_y -5, 10)
 
-            #O centro
             pyxel.circ(tela_x, tela_y, 4, 10)
 
     def converter_coordenada(self):
