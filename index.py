@@ -132,7 +132,7 @@ class Estrela:
                       tela_x +2, tela_y +5,
                       tela_x +2, tela_y -5, 10)
 
-            pyxel.circ(tela_x, tela_y, 4, 10)
+            pyxel.circ(tela_x, tela_y, 4, 7)
 
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
@@ -147,6 +147,15 @@ class Reta:
 
     def calcular_y(self, x):
         return self.a * x + self.b
+    
+    def passa_por(self, estrela):
+        y_calculado = self.calcular_y(estrela.x)
+        return y_calculado == estrela.y
+    #Verificar tds as estrelas quando encontrar ele coleta.
+    def coletar_estrelas(self, estrelas):
+        for estrela in estrelas:
+            if self.pass_por(estrela):
+                estrela.coletada =
 
     def desenhar(self):
         anterior_x = None
