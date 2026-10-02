@@ -32,8 +32,8 @@ class TelaInicial:
         
         # Mostra o aviso de pressionar ENTER apenas quando terminar de digitar
         if len(self.titulo_atual) == len(self.titulo_completo):
-            if (pyxel.frame_count // 15) % 2 == 0:
-                pyxel.text(100, 160, "           Pressione ENTER para continuar", 13)
+            if (pyxel.frame_count // 5) % 2 == 0:
+                pyxel.text(100, 150, "          Pressione ENTER para continuar", 13)
 from fractions import Fraction
 
 class ModalColeta:
