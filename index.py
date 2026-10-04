@@ -59,20 +59,9 @@ class ModalColeta:
         pyxel.rect(104, 114, 200, 50, 0)
         pyxel.rect(100, 110, 200, 50, 11)
         pyxel.rectb(100, 110, 200, 50, 7)
-        
-        # 1. Carregando uma fonte no formato BDF (não requer definição de tamanho)
-        #font_bdf = pyxel.Font("assets/minha_fonte.bdf")
-
-        # 2. Carregando uma fonte TrueType (.ttf) especificando o tamanho (ex: 12)
-        #font_ttf = pyxel.Font("assets/PixelMplus12-Regular.ttf", 12)
-        
-        # Texto da modal
-        #pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 7, fonte_bdf)
         pyxel.text(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!", 7)
-        
-        if len(self.titulo_atual) == len(self.titulo_completo):
-            if (pyxel.frame_count // 15) % 2 == 0:
-                pyxel.text(100, 160, "Pressione ENTER para continuar", 13)
+    
+    
 class ModalFimJogo:
     def desenhar(self):
         for y in range(0, 300, 2):
@@ -244,8 +233,8 @@ class Jogo:
         self.tela_inicial = TelaInicial()
         self.som_inicio_tocado = False  
         
-        self.texto_1 = "1"  
-        self.texto_2 = "3"  
+        self.texto_1 = ""  
+        self.texto_2 = ""  
         self.foco_input = "a"
         self.mudou_valores = False  
         
@@ -286,6 +275,49 @@ class Jogo:
 
         pyxel.run(self.update, self.draw)
 
+    def iniciar_jogo(self): # Inicia o jogo com todas as variáveis resetadas
+        self.estado = "JOGANDO"
+
+        self.jogo_encerrado = False
+        self.jogo_vencido = False
+
+        self.modal_fim = None
+        self.modal_vitoria = None
+        self.modal = None
+        self.mostrar_modal = False
+
+        self.fim_timer = 0
+        self.vitoria_timer = 0
+        self.modal_timer = 0
+
+        self.texto_1 = ""
+        self.texto_2 = ""
+        self.foco_input = "a"
+        self.mudou_valores = False
+
+        self.reta1 = None
+
+        self.quant_estrelas = random.randint(4, 8)
+        self.tentativas_restantes = self.quant_estrelas * 2
+
+        self.estrelas = []
+        posicoes = []
+
+        for i in range(self.quant_estrelas):
+            x = random.randint(-7, 7)
+            y = random.randint(-6, 6)
+
+            while (x, y) in posicoes:
+                x = random.randint(-7, 7)
+                y = random.randint(-6, 6)
+
+            sprite_x = random.choice([0, 16, 32, 48, 64])
+            sprite_y = 0
+
+            estrela = Estrela(x, y, 14, 18, 7, sprite_x, sprite_y)
+
+            self.estrelas.append(estrela)
+            posicoes.append((x, y))
     def converter_numero(self, texto):
         texto = texto.strip()
 
@@ -312,9 +344,7 @@ class Jogo:
         if self.estado == "TELA_INICIAL":
             proximo_estado = self.tela_inicial.update()
             if proximo_estado == "JOGANDO":
-                self.jogo_encerrado = False
-                self.estado = "JOGANDO"
-            return
+                self.iniciar_jogo()
 
         if self.estado == "JOGANDO" and not self.som_inicio_tocado:
             pyxel.play(0, 1)  # Toca o som de início/decolagem
@@ -329,16 +359,25 @@ class Jogo:
         # Lógica da modal de vitória temporizada
         if self.jogo_vencido:
             self.vitoria_timer -= 1
+
             if self.vitoria_timer <= 0:
-                pyxel.quit()  
+                self.estado = "TELA_INICIAL"
+                self.jogo_vencido = False
+                self.modal_vitoria = None
+                self.tela_inicial = TelaInicial()
+
             return
         
         # 4. Lógica de fim de jogo (derrota)
         if self.jogo_encerrado:
-            self.fim_timer -= 1      
+            self.fim_timer -= 1
+
             if self.fim_timer <= 0:
                 self.estado = "TELA_INICIAL"
-                #pyxel.quit()        
+                self.jogo_encerrado = False
+                self.modal_fim = None
+                self.tela_inicial = TelaInicial()
+
             return
 
         # 5. Entrada de dados via teclado
@@ -359,6 +398,14 @@ class Jogo:
             elif self.foco_input == "b":
                 self.texto_2 = self.texto_2[:-1]
                 self.mudou_valores = True
+
+        
+        # Troca de input usando as setas do teclado
+        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_DOWN):
+            if self.foco_input == "a":
+                self.foco_input = "b"
+            else:
+                self.foco_input = "a"
                 
         # 6. Processamento ao apertar ENTER
         if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
@@ -410,7 +457,7 @@ class Jogo:
                 
                 if distancia <= 0.3:
                     estrela.coletada = True
-                    # self.modal = ModalColeta(estrela) 
+                    self.modal = ModalColeta(estrela)
                     self.mostrar_modal = True
                     self.modal_timer = 120  
                     colidiu_agora = True
