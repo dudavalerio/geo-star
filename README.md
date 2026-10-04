@@ -1,11 +1,13 @@
 # geo-star
 
 
+Descrição do Jogo
+O jogo tem como objetivo praticar e adquirir conhecimentos de Geometria Analítica, utilizando a equação da reta y = ax + b para capturar estrelas no plano cartesiano.
 
-O Jogo tem como objetivo praticar e adquirir conhecimentos de Geometria Analítica, utilizando a equação da reta (y = ax + b) para capturar estrelas no plano cartesiano.
+Ao iniciar uma partida, as estrelas serão distribuídas aleatoriamente pelo plano cartesiano. A quantidade de estrelas será definida aleatoriamente, podendo variar entre 4 e 8 estrelas por partida.
 
-Ao iniciar o jogo as estrelas serão distribuídas no plano, o número mínimo de estrelas no plano é 4 e máximo é 8, a quantidade de estrelas na partida será determinada pelo random dentro dessa limitação.
+Para iniciar a captura das estrelas, o usuário deverá informar um valor para “a” (coeficiente angular) e/ou “b” (coeficiente linear). A partir desses valores, uma reta será projetada no plano cartesiano, permitindo ao usuário tentar capturar as estrelas que estiverem sobre ou próximas à reta.
 
-Para iniciar o jogo o usuário deve digitar um valor para “a“(coeficiente angular)  e/ou “b“(coeficiente angular) afim de coletar alguma das estrelas no plano. Através desses valores será projetada uma reta no plano.
+O usuário terá uma quantidade de tentativas equivalente ao dobro do número de estrelas presentes no plano. Por exemplo, se uma partida possuir 5 estrelas, o usuário terá 10 tentativas para capturar todas elas.
 
-O usuário terá de tentativas o dobro do número de estrelas no plano. Por exemplo: 5 estrelas no plano, o usuário terá 10 tentativas para coletar todas estrelas do plano.
+O jogador vence quando conseguir capturar todas as estrelas antes que suas tentativas se esgotem.
