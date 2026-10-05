@@ -164,8 +164,8 @@ class Reta:
         for x in range(-10, 11):
             y = self.calcular_y(x)
 
-            tela_x = 200 + (x) * 20
-            tela_y = 150 - (y) * 20
+            tela_x = 250 + (x) * 20
+            tela_y = 170 - (y) * 20
 
             if anterior_x is not None:
                 pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
@@ -178,13 +178,20 @@ class Plano:
         pyxel.mouse(True)
 
     def desenhar(self):
-        #Linhas que cortam o plano
+        #Reserva uma área a esquerda para os controles
+        pyxel.rect(0, 0, 100, 300, 3)
+        #Linha que separa os controles do plano
+        pyxel.line(95, 0, 95, 300, 7)
+        #Linhas verticais que cortam o plano
         for x in range(-7, 8):
             tela_x = 250 + x * 20
-            pyxel.line(tela_x, 40, tela_x, 300, 1)
-            
+            #Desenha a linha somente dentro da área do plano
+            if tela_x >= 100:
+                pyxel.line(tela_x, 40, tela_x, 300, 1)
+        #Linhas horizontais que cortam o plano
         for y in range(-6, 7):
             tela_y = 170 - y * 20
+            #Linha que atravessa toda a área do plano
             pyxel.line(100, tela_y, 400, tela_y, 1)
             
         #Linhas X e Y
@@ -243,11 +250,11 @@ class Jogo:
         self.estado = "TELA_INICIAL"
         self.tela_inicial = TelaInicial()
         self.som_inicio_tocado = False  
-        
-        self.texto_1 = "1"  
-        self.texto_2 = "3"  
+
+        self.texto_1 = ""
+        self.texto_2 = ""
         self.foco_input = "a"
-        self.mudou_valores = False  
+        self.mudou_valores = False
         
         self.modal = None
         self.mostrar_modal = False
@@ -435,13 +442,13 @@ class Jogo:
             estrela.desenhar()
             
         pyxel.text(239, 10, 'GeoStar', 10)
-        pyxel.text(10, 95, f"Tentativas Restantes: {self.tentativas_restantes}", 8 if self.tentativas_restantes <= 2 else 7)
+        pyxel.text(10, 95, f"Tentativas: {self.tentativas_restantes}", 8 if self.tentativas_restantes <= 2 else 7)
         
-        pyxel.text(10, 10, "Valor de 'a' (inclinação):", 7)
+        pyxel.text(10, 10, "Valor de 'a':", 7)
         cor_borda_a = 11 if self.foco_input == "a" else 5  
         pyxel.rectb(8, 22, 70, 20, cor_borda_a)
         
-        pyxel.text(10, 52, "Valor de 'b' (interseção Y):", 7)
+        pyxel.text(10, 52, "Valor de 'b':", 7)
         cor_borda_b = 11 if self.foco_input == "b" else 5  
         pyxel.rectb(8, 62, 70, 20, cor_borda_b)
         
