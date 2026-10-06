@@ -227,6 +227,8 @@ class Plano:
         pyxel.mouse(True)
 
     def desenhar(self):
+        #Reserva uma área pra cima do plano pra o plano
+        pyxel.rect(100, 0, 300, 40, 3)
         #Reserva uma área a esquerda para os controles
         pyxel.rect(0, 0, 100, 300, 3)
         #Linha que separa os controles do plano
@@ -524,24 +526,26 @@ class Jogo:
         
         for estrela in self.estrelas:
             estrela.desenhar()
-            
-        Tipografia.titulo(239, 10, 'GeoStar')
+
+        pyxel.text(34, 20, 'GEOSTAR', 7)
+        pyxel.text(221, 20, 'PLANO CARTESIANO', 7)
+        pyxel.text(13, 40, 'Desafio das Retas', 7)
         
         alerta_tentativas = self.tentativas_restantes <= 2
-        Tipografia.aviso(10, 95, f"Tentativas Restantes: {self.tentativas_restantes}", alerta_tentativas)
+        Tipografia.aviso(10, 150, f"Tentativas: {self.tentativas_restantes}", alerta_tentativas)
         
-        Tipografia.subtitulo(10, 10, "Valor de 'a' (inclinação):")
+        Tipografia.subtitulo(10, 70, "Valor de 'a':")
         cor_borda_a = 11 if self.foco_input == "a" else 5  
-        pyxel.rectb(8, 111, 70, 20, cor_borda_a)
+        pyxel.rectb(8, 81, 70, 20, cor_borda_a)
         
-        Tipografia.subtitulo(10, 52, "Valor de 'b' (interseção Y):")
+        Tipografia.subtitulo(10, 110, "Valor de 'b':")
         cor_borda_b = 11 if self.foco_input == "b" else 5  
-        pyxel.rectb(8, 150, 70, 20, cor_borda_b)
+        pyxel.rectb(8, 120, 70, 20, cor_borda_b)
         
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
         
-        Tipografia.subtitulo(14, 29, self.texto_1 + (cursor if self.foco_input == "a" else ""))
-        Tipografia.subtitulo(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""))
+        Tipografia.subtitulo(14, 89, self.texto_1 + (cursor if self.foco_input == "a" else ""))
+        Tipografia.subtitulo(14, 129, self.texto_2 + (cursor if self.foco_input == "b" else ""))
         
         pyxel.mouse(True)
         
