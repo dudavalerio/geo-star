@@ -91,7 +91,7 @@ class ModalVitoria:
                 
         pyxel.rect(104, 114, 200, 60, 0)
         pyxel.rect(100, 110, 200, 60, 0)
-        pyxel.rectb(100, 110, 200, 60, 11)
+        pyxel.recb(100, 110, 200, 60, 11)
 
         pyxel.text(110, 118, "VOCÊ VENCEU!", 11)
         pyxel.text(110, 130, "Todas as estrelas foram coletadas!", 7)
@@ -181,7 +181,7 @@ class Plano:
         #Reserva uma área a esquerda para os controles
         pyxel.rect(0, 0, 100, 300, 3)
         #Linha que separa os controles do plano
-        pyxel.line(95, 0, 95, 300, 7)
+        pyxel.line(100, 0, 100, 300, 1)
         #Linhas verticais que cortam o plano
         for x in range(-7, 8):
             tela_x = 250 + x * 20
@@ -426,8 +426,6 @@ class Jogo:
 
     def draw(self):
         pyxel.cls(0)
-
-     
         # Se estiver na tela inicial, desenha apenas ela e sai
         if self.estado == "TELA_INICIAL":
             self.tela_inicial.draw()
@@ -442,20 +440,21 @@ class Jogo:
             estrela.desenhar()
             
         pyxel.text(239, 10, 'GeoStar', 10)
-        pyxel.text(10, 95, f"Tentativas: {self.tentativas_restantes}", 8 if self.tentativas_restantes <= 2 else 7)
+        pyxel.text(34, 20, 'GEOSTAR', 7)
+        pyxel.text(10, 200, f"Tentativas: {self.tentativas_restantes}", 8 if self.tentativas_restantes <= 2 else 7)
         
-        pyxel.text(10, 10, "Valor de 'a':", 7)
+        pyxel.text(10, 100, "Valor de 'a':", 7)
         cor_borda_a = 11 if self.foco_input == "a" else 5  
-        pyxel.rectb(8, 22, 70, 20, cor_borda_a)
+        pyxel.rectb(8, 111, 70, 20, cor_borda_a)
         
-        pyxel.text(10, 52, "Valor de 'b':", 7)
+        pyxel.text(10, 140, "Valor de 'b':", 7)
         cor_borda_b = 11 if self.foco_input == "b" else 5  
-        pyxel.rectb(8, 62, 70, 20, cor_borda_b)
+        pyxel.rectb(8, 150, 70, 20, cor_borda_b)
         
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
         
-        pyxel.text(14, 29, self.texto_1 + (cursor if self.foco_input == "a" else ""), 7)
-        pyxel.text(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""), 7)
+        pyxel.text(14, 119, self.texto_1 + (cursor if self.foco_input == "a" else ""), 7)
+        pyxel.text(14, 158, self.texto_2 + (cursor if self.foco_input == "b" else ""), 7)
         
         pyxel.mouse(True)
         
