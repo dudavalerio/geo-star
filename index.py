@@ -84,7 +84,7 @@ a coleta."""
         
         
         # Aviso centralizado
-        texto_aviso = "Pressione ENTER para continuar"
+        texto_aviso = "Pressione ENTER para iniciar"
         x_aviso = 200 - (len(texto_aviso) * 2)
         if len(self.titulo_atual) == len(self.titulo_completo):
             if (pyxel.frame_count // 10) % 2 == 0:
