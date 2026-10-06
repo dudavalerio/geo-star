@@ -140,7 +140,7 @@ class ModalVitoria:
                 
         pyxel.rect(104, 114, 200, 60, 0)
         pyxel.rect(100, 110, 200, 60, 0)
-        pyxel.rectb(100, 110, 200, 60, 11)
+        pyxel.recb(100, 110, 200, 60, 11)
 
         Tipografia.titulo(110, 118, "VOCÊ VENCEU!")
         Tipografia.subtitulo(110, 130, "Todas as estrelas foram coletadas!")
@@ -180,7 +180,7 @@ class Estrela:
                       tela_x + 2, tela_y + 5,
                       tela_x + 2, tela_y - 5, 10)
 
-            pyxel.circ(tela_x, tela_y, 4, 10)
+            pyxel.circ(tela_x, tela_y, 4, 7)
 
     def converter_coordenada(self):
         tela_x = 250 + self.x * 20
@@ -195,6 +195,15 @@ class Reta:
 
     def calcular_y(self, x):
         return self.a * x + self.b
+    
+    def passa_por(self, estrela):
+        y_calculado = self.calcular_y(estrela.x)
+        return y_calculado == estrela.y
+    #Verificar tds as estrelas quando encontrar ele coleta.
+    def coletar_estrelas(self, estrelas):
+        for estrela in estrelas:
+            if self.pass_por(estrela):
+                estrela.coletada = True
 
     def desenhar(self):
         anterior_x = None
@@ -203,8 +212,8 @@ class Reta:
         for x in range(-10, 11):
             y = self.calcular_y(x)
 
-            tela_x = 200 + (x) * 20
-            tela_y = 150 - (y) * 20
+            tela_x = 250 + (x) * 20
+            tela_y = 170 - (y) * 20
 
             if anterior_x is not None:
                 pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
@@ -218,12 +227,20 @@ class Plano:
         pyxel.mouse(True)
 
     def desenhar(self):
+        #Reserva uma área a esquerda para os controles
+        pyxel.rect(0, 0, 100, 300, 3)
+        #Linha que separa os controles do plano
+        pyxel.line(100, 0, 100, 300, 1)
+        #Linhas verticais que cortam o plano
         for x in range(-7, 8):
             tela_x = 250 + x * 20
-            pyxel.line(tela_x, 40, tela_x, 300, 1)
-            
+            #Desenha a linha somente dentro da área do plano
+            if tela_x >= 100:
+                pyxel.line(tela_x, 40, tela_x, 300, 1)
+        #Linhas horizontais que cortam o plano
         for y in range(-6, 7):
             tela_y = 170 - y * 20
+            #Linha que atravessa toda a área do plano
             pyxel.line(100, tela_y, 400, tela_y, 1)
             
         pyxel.line(100, 170, 400, 170, 7)
@@ -274,7 +291,7 @@ class Jogo:
         self.texto_1 = ""  
         self.texto_2 = ""  
         self.foco_input = "a"
-        self.mudou_valores = False  
+        self.mudou_valores = False
         
         self.modal = None
         self.mostrar_modal = False
@@ -515,11 +532,11 @@ class Jogo:
         
         Tipografia.subtitulo(10, 10, "Valor de 'a' (inclinação):")
         cor_borda_a = 11 if self.foco_input == "a" else 5  
-        pyxel.rectb(8, 22, 70, 20, cor_borda_a)
+        pyxel.rectb(8, 111, 70, 20, cor_borda_a)
         
         Tipografia.subtitulo(10, 52, "Valor de 'b' (interseção Y):")
         cor_borda_b = 11 if self.foco_input == "b" else 5  
-        pyxel.rectb(8, 62, 70, 20, cor_borda_b)
+        pyxel.rectb(8, 150, 70, 20, cor_borda_b)
         
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
         
