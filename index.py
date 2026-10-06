@@ -40,13 +40,15 @@ class TelaInicial:
                 'cor': random.choice([7, 10, 6, 13]),
                 'tamanho': random.choice([1, 1, 2])
             })
-        self.instrucoes = """Instruções do Jogo:
+        self.instrucoes = """Instrucoes do Jogo:
 
-O jogo tem como objetivo capturar estrelas no plano através da equação da reta y= ax+b.
+O jogo tem como objetivo capturar estrelas no plano atraves da equacao da reta y= ax+b.
 
-Para iniciar o jogo digite um valor para “a“ e um valor para “b“ afim de coletar uma
-das estrelas no plano, com base nesses valores a reta será projeta sobre o plano para realizar
-a coleta."""
+Para iniciar o jogo digite um valor para “a“ (coeficiente angular) e um valor para “b“ ( coeficiente 
+
+linear ) afim de coletar uma das estrelas no plano, com base nesses valores a reta será projeta 
+
+sobre o plano para realizar a coleta."""
 
     def update(self):
         if not self.som_tocado:
@@ -88,7 +90,7 @@ a coleta."""
         x_aviso = 200 - (len(texto_aviso) * 2)
         if len(self.titulo_atual) == len(self.titulo_completo):
             if (pyxel.frame_count // 10) % 2 == 0:
-                Tipografia.aviso(x_aviso, 200, texto_aviso, False)
+                Tipografia.aviso(x_aviso, 220, texto_aviso, False)
             pyxel.text(10, 150, self.instrucoes, 7)
 
             
