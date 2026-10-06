@@ -1,6 +1,7 @@
 import math
 import pyxel
 import random
+from fractions import Fraction
 
 class Tipografia:
     """Gerencia estilos de texto padronizados para o jogo."""
@@ -39,6 +40,13 @@ class TelaInicial:
                 'cor': random.choice([7, 10, 6, 13]),
                 'tamanho': random.choice([1, 1, 2])
             })
+        self.instrucoes = """Instruções do Jogo:
+
+O jogo tem como objetivo capturar estrelas no plano através da equação da reta y= ax+b.
+
+Para iniciar o jogo digite um valor para “a“ e um valor para “b“ afim de coletar uma
+das estrelas no plano, com base nesses valores a reta será projeta sobre o plano para realizar
+a coleta."""
 
     def update(self):
         if not self.som_tocado:
@@ -59,6 +67,7 @@ class TelaInicial:
 
     def draw(self):
         pyxel.cls(0)
+        pyxel.text(120, 100, self.titulo_atual, 7)
         
         # Desenha o céu estrelado de fundo (apenas pequenas)
         for est in self.estrelas_fundo:
@@ -82,6 +91,9 @@ class TelaInicial:
 
 
 from fractions import Fraction
+            pyxel.text(10, 150, self.instrucoes, 7)
+
+            
 
 class ModalColeta:
     def __init__(self, estrela):
@@ -259,8 +271,8 @@ class Jogo:
 
         self.som_inicio_tocado = False  
         
-        self.texto_1 = "1"  
-        self.texto_2 = "3"  
+        self.texto_1 = ""  
+        self.texto_2 = ""  
         self.foco_input = "a"
         self.mudou_valores = False  
         
@@ -298,6 +310,49 @@ class Jogo:
 
         pyxel.run(self.update, self.draw)
 
+    def iniciar_jogo(self): # Inicia o jogo com todas as variáveis resetadas
+        self.estado = "JOGANDO"
+
+        self.jogo_encerrado = False
+        self.jogo_vencido = False
+
+        self.modal_fim = None
+        self.modal_vitoria = None
+        self.modal = None
+        self.mostrar_modal = False
+
+        self.fim_timer = 0
+        self.vitoria_timer = 0
+        self.modal_timer = 0
+
+        self.texto_1 = ""
+        self.texto_2 = ""
+        self.foco_input = "a"
+        self.mudou_valores = False
+
+        self.reta1 = None
+
+        self.quant_estrelas = random.randint(4, 8)
+        self.tentativas_restantes = self.quant_estrelas * 2
+
+        self.estrelas = []
+        posicoes = []
+
+        for i in range(self.quant_estrelas):
+            x = random.randint(-7, 7)
+            y = random.randint(-6, 6)
+
+            while (x, y) in posicoes:
+                x = random.randint(-7, 7)
+                y = random.randint(-6, 6)
+
+            sprite_x = random.choice([0, 16, 32, 48, 64])
+            sprite_y = 0
+
+            estrela = Estrela(x, y, 14, 18, 7, sprite_x, sprite_y)
+
+            self.estrelas.append(estrela)
+            posicoes.append((x, y))
     def converter_numero(self, texto):
         texto = texto.strip()
 
@@ -321,8 +376,7 @@ class Jogo:
         if self.estado == "TELA_INICIAL":
             proximo_estado = self.tela_inicial.update()
             if proximo_estado == "JOGANDO":
-                self.estado = "JOGANDO"
-            return
+                self.iniciar_jogo()
 
         if self.estado == "JOGANDO" and not self.som_inicio_tocado:
             pyxel.play(0, 1)  
@@ -336,14 +390,24 @@ class Jogo:
         
         if self.jogo_vencido:
             self.vitoria_timer -= 1
+
             if self.vitoria_timer <= 0:
-                pyxel.quit()  
+                self.estado = "TELA_INICIAL"
+                self.jogo_vencido = False
+                self.modal_vitoria = None
+                self.tela_inicial = TelaInicial()
+
             return
         
         if self.jogo_encerrado:
-            self.fim_timer -= 1      
+            self.fim_timer -= 1
+
             if self.fim_timer <= 0:
-                pyxel.quit()        
+                self.estado = "TELA_INICIAL"
+                self.jogo_encerrado = False
+                self.modal_fim = None
+                self.tela_inicial = TelaInicial()
+
             return
 
         caracteres_digitados = pyxel.input_text
@@ -363,6 +427,14 @@ class Jogo:
             elif self.foco_input == "b":
                 self.texto_2 = self.texto_2[:-1]
                 self.mudou_valores = True
+
+        
+        # Troca de input usando as setas do teclado
+        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_DOWN):
+            if self.foco_input == "a":
+                self.foco_input = "b"
+            else:
+                self.foco_input = "a"
                 
         if pyxel.btnp(pyxel.KEY_RETURN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
             if self.mudou_valores:
@@ -413,6 +485,7 @@ class Jogo:
                 
                 if distancia <= 0.3:
                     estrela.coletada = True
+                    self.modal = ModalColeta(estrela)
                     self.mostrar_modal = True
                     self.modal_timer = 120  
                     colidiu_agora = True
@@ -463,5 +536,5 @@ class Jogo:
             
         if self.jogo_vencido and self.modal_vitoria is not None:
             self.modal_vitoria.desenhar()
-
+         
 Jogo()
