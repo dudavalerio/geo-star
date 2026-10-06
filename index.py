@@ -67,7 +67,7 @@ a coleta."""
 
     def draw(self):
         pyxel.cls(0)
-        pyxel.text(120, 100, self.titulo_atual, 7)
+        
         
         # Desenha o céu estrelado de fundo (apenas pequenas)
         for est in self.estrelas_fundo:
@@ -82,15 +82,13 @@ a coleta."""
         x_titulo = 200 - (len(self.titulo_completo) * 2)
         Tipografia.titulo(x_titulo, 135, self.titulo_atual)
         
+        
         # Aviso centralizado
         texto_aviso = "Pressione ENTER para continuar"
         x_aviso = 200 - (len(texto_aviso) * 2)
         if len(self.titulo_atual) == len(self.titulo_completo):
             if (pyxel.frame_count // 10) % 2 == 0:
-                Tipografia.aviso(x_aviso, 165, texto_aviso, False)
-
-
-from fractions import Fraction
+                Tipografia.aviso(x_aviso, 200, texto_aviso, False)
             pyxel.text(10, 150, self.instrucoes, 7)
 
             
