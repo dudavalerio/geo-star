@@ -123,7 +123,7 @@ class ModalFimJogo:
         pyxel.rect(130, 120, 140, 40, 0)
         pyxel.rectb(130, 120, 140, 40, 8)
 
-        Tipografia.titulo(155, 132, "      FIM DE JOGO!")
+        Tipografia.titulo(155, 132, "       FIM DE JOGO!")
         Tipografia.subtitulo(142, 144, "   Acabaram as tentativas")
 
 
@@ -531,11 +531,13 @@ class Jogo:
         Tipografia.aviso(10, 95, f"Tentativas Restantes: {self.tentativas_restantes}", alerta_tentativas)
         
         Tipografia.subtitulo(10, 10, "Valor de 'a' (inclinação):")
-        cor_borda_a = 11 if self.foco_input == "a" else 5  
+        cor_borda_a = 11 if self.foco_input == "a" else 7  
+        pyxel.rect(8, 111, 70, 20, 0)
         pyxel.rectb(8, 111, 70, 20, cor_borda_a)
         
         Tipografia.subtitulo(10, 52, "Valor de 'b' (interseção Y):")
-        cor_borda_b = 11 if self.foco_input == "b" else 5  
+        cor_borda_b = 11 if self.foco_input == "b" else 7  
+        pyxel.rect(8, 150, 70, 20, 0)
         pyxel.rectb(8, 150, 70, 20, cor_borda_b)
         
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
