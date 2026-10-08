@@ -143,14 +143,14 @@ class ModalVitoria:
                 pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
                 
-        pyxel.rect(104, 114, 200, 60, 0)
-        pyxel.rect(100, 110, 200, 60, 0)
-        pyxel.rect(100, 110, 200, 60, 11)
+        pyxel.rect(195, 114, 150, 60, 0)
+        pyxel.rect(195, 110, 150, 60, 0)
+        pyxel.rect(195, 110, 150, 60, 11)
 
-        Tipografia.titulo(110, 118, "VOCE VENCEU!")
-        Tipografia.subtitulo(110, 130, "Todas as estrelas foram coletadas!")
-        Tipografia.subtitulo(110, 145, f"Estrelas capturadas: {self.total_estrelas}")
-        Tipografia.subtitulo(110, 155, f"Tentativas restantes: {self.tentativas_restantes}")
+        Tipografia.titulo(200, 118, "VOCE VENCEU!")
+        Tipografia.subtitulo(200, 130, "Todas as estrelas foram coletadas!")
+        Tipografia.subtitulo(200, 145, f"Estrelas capturadas: {self.total_estrelas}")
+        Tipografia.subtitulo(200, 155, f"Tentativas restantes: {self.tentativas_restantes}")
 
 
 class Estrela:
