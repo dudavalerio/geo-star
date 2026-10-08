@@ -44,9 +44,9 @@ class TelaInicial:
 
 O jogo tem como objetivo capturar estrelas no plano atraves da equacao da reta y= ax+b.
 
-Para iniciar o jogo digite um valor para “a“ (coeficiente angular) e um valor para “b“ ( coeficiente 
+Para iniciar o jogo digite um valor para “a“ (coeficiente angular) e um valor para “b“ (coeficiente 
 
-linear ) afim de coletar uma das estrelas no plano, com base nesses valores a reta será projeta 
+linear) afim de coletar uma das estrelas no plano, com base nesses valores a reta será projeta 
 
 sobre o plano para realizar a coleta."""
 
@@ -108,8 +108,8 @@ class ModalColeta:
         altura_rect = 10
         for estrela in self.estrelas:
             altura_rect=altura_rect+20
-            
-        pyxel.rect(100, 110, 134, altura_rect, 11)
+        pyxel.rect(100, 114, 138, altura_rect+4, 7)    
+        pyxel.rect(102, 116, 134, altura_rect, 11)
         
         y= 122
         for estrela in self.estrelas:
@@ -565,4 +565,5 @@ class Jogo:
             self.modal_vitoria.desenhar()
          
 Jogo()
+
 
