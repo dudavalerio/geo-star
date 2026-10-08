@@ -227,11 +227,7 @@ class Plano:
         pyxel.mouse(True)
 
     def desenhar(self):
-        #Reserva uma área pra cima do plano pra o plano
-        pyxel.rect(100, 0, 300, 40, 3)
-        #Reserva uma área a esquerda para os controles
         pyxel.rect(0, 0, 100, 300, 3)
-        #Linha que separa os controles do plano
         pyxel.line(100, 0, 100, 300, 1)
         #Linhas verticais que cortam o plano
         for x in range(-7, 8):
@@ -540,7 +536,7 @@ class Jogo:
         
         Tipografia.subtitulo(10, 110, "Valor de 'b':")
         cor_borda_b = 11 if self.foco_input == "b" else 5  
-        pyxel.rectb(8, 120, 70, 20, cor_borda_b)
+        pyxel.rectb(8, 120, 70, 20, cor_borda_a)
         
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
         
