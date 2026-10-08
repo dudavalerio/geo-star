@@ -540,11 +540,11 @@ class Jogo:
         alerta_tentativas = self.tentativas_restantes <= 2
         Tipografia.aviso(10, 150, f"Tentativas: {self.tentativas_restantes}", alerta_tentativas)
         
-        Tipografia.subtitulo(10, 70, "Valor de 'a':")
+        Tipografia.subtitulo(10, 70, "Valor de 'A':")
         cor_borda_a = 11 if self.foco_input == "a" else 5  
         pyxel.rectb(8, 81, 70, 20, cor_borda_a)
         
-        Tipografia.subtitulo(10, 110, "Valor de 'b':")
+        Tipografia.subtitulo(10, 110, "Valor de 'B':")
         cor_borda_b = 11 if self.foco_input == "b" else 5  
         pyxel.rectb(8, 120, 70, 20, cor_borda_a)
         
