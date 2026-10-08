@@ -44,9 +44,9 @@ class TelaInicial:
 
 O jogo tem como objetivo capturar estrelas no plano atraves da equacao da reta y= ax+b.
 
-Para iniciar o jogo digite um valor para “a“ (coeficiente angular) e um valor para “b“ ( coeficiente 
+Para iniciar o jogo digite um valor para “a“ (coeficiente angular) e um valor para “b“ (coeficiente 
 
-linear ) afim de coletar uma das estrelas no plano, com base nesses valores a reta será projeta 
+linear) afim de coletar uma das estrelas no plano, com base nesses valores a reta será projeta 
 
 sobre o plano para realizar a coleta."""
 
