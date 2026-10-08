@@ -96,21 +96,26 @@ sobre o plano para realizar a coleta."""
             
 
 class ModalColeta:
-    def __init__(self, estrela):
-        self.estrela = estrela
+    def __init__(self, estrelas):
+        self.estrelas = estrelas
 
     def desenhar(self):
         for y in range(0, 300, 2):
             for x in range(0, 400, 2):
                 pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
+                
+        altura_rect = 10
+        for estrela in self.estrelas:
+            altura_rect=altura_rect+20
+            
+        pyxel.rect(100, 110, 134, altura_rect, 11)
         
-        pyxel.rect(104, 114, 200, 50, 0)
-        pyxel.rect(100, 110, 200, 50, 11)
-        pyxel.rectb(100, 110, 200, 50, 7)
+        y= 122
+        for estrela in self.estrelas:
+            Tipografia.subtitulo(110, y, f"Estrela em ({estrela.x}, {estrela.y}) capturada!")
+            y=y+20
         
-        Tipografia.subtitulo(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!")
-
 
 class ModalFimJogo:
     def desenhar(self):
@@ -140,9 +145,9 @@ class ModalVitoria:
                 
         pyxel.rect(104, 114, 200, 60, 0)
         pyxel.rect(100, 110, 200, 60, 0)
-        pyxel.recb(100, 110, 200, 60, 11)
+        pyxel.rect(100, 110, 200, 60, 11)
 
-        Tipografia.titulo(110, 118, "VOCÊ VENCEU!")
+        Tipografia.titulo(110, 118, "VOCE VENCEU!")
         Tipografia.subtitulo(110, 130, "Todas as estrelas foram coletadas!")
         Tipografia.subtitulo(110, 145, f"Estrelas capturadas: {self.total_estrelas}")
         Tipografia.subtitulo(110, 155, f"Tentativas restantes: {self.tentativas_restantes}")
@@ -494,6 +499,7 @@ class Jogo:
 
     def verificar_todas_colisoes(self):
         colidiu_agora = False
+        estrelas = []
         for estrela in self.estrelas:
             if not estrela.coletada:
                 numerador = abs(self.reta1.a * estrela.x - estrela.y + self.reta1.b)
@@ -502,12 +508,16 @@ class Jogo:
                 
                 if distancia <= 0.3:
                     estrela.coletada = True
-                    self.modal = ModalColeta(estrela)
-                    self.mostrar_modal = True
-                    self.modal_timer = 120  
+                    estrelas.append(estrela)
+                    print(estrela)  
                     colidiu_agora = True
                     pyxel.play(0, 2)  
                     print(f"⭐ Estrela na coordenada ({estrela.x}, {estrela.y}) capturada!")
+                
+        if colidiu_agora: # Mostra na tela as estrelas coletadas
+            self.modal = ModalColeta(estrelas)
+            self.mostrar_modal = True
+            self.modal_timer = 120 
                     
         return colidiu_agora
 
@@ -555,3 +565,4 @@ class Jogo:
             self.modal_vitoria.desenhar()
          
 Jogo()
+
