@@ -109,12 +109,11 @@ class ModalColeta:
         for estrela in self.estrelas:
             altura_rect=altura_rect+20
             
-        pyxel.rect(100, 110, 134, altura_rect, 11)
-        
-        y= 122
+        pyxel.rect(180, 160, 134, altura_rect, 11)
+        y = 170
         for estrela in self.estrelas:
-            Tipografia.subtitulo(110, y, f"Estrela em ({estrela.x}, {estrela.y}) capturada!")
-            y=y+20
+            Tipografia.subtitulo(190, y, f"Estrela em ({estrela.x}, {estrela.y}) capturada!")
+            y = y + 10
         
 
 class ModalFimJogo:
@@ -124,12 +123,12 @@ class ModalFimJogo:
                 pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
                 
-        pyxel.rect(134, 124, 140, 40, 0)
-        pyxel.rect(130, 120, 140, 40, 0)
-        pyxel.rectb(130, 120, 140, 40, 8)
+        pyxel.rect(180, 154, 140, 40, 0)
+        pyxel.rect(180, 154, 140, 40, 0)
+        pyxel.rectb(180, 154, 140, 40, 8)
 
-        Tipografia.titulo(155, 132, "      FIM DE JOGO!")
-        Tipografia.subtitulo(142, 144, "   Acabaram as tentativas")
+        Tipografia.titulo(228, 165, "FIM DE JOGO!")
+        Tipografia.subtitulo(210, 175, "Acabaram as tentativas")
 
 
 class ModalVitoria:
@@ -143,14 +142,14 @@ class ModalVitoria:
                 pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
                 
-        pyxel.rect(195, 114, 150, 60, 0)
-        pyxel.rect(195, 110, 150, 60, 0)
-        pyxel.rect(195, 110, 150, 60, 11)
+        pyxel.rect(180, 140, 140, 60, 0)
+        pyxel.rect(180, 140, 140, 60, 0)
+        pyxel.rect(180, 140, 140, 60, 11)
 
-        Tipografia.titulo(200, 118, "VOCE VENCEU!")
-        Tipografia.subtitulo(200, 130, "Todas as estrelas foram coletadas!")
-        Tipografia.subtitulo(200, 145, f"Estrelas capturadas: {self.total_estrelas}")
-        Tipografia.subtitulo(200, 155, f"Tentativas restantes: {self.tentativas_restantes}")
+        Tipografia.titulo(183, 150, "VOCE VENCEU!")
+        Tipografia.subtitulo(183, 160, "Todas as estrelas foram coletadas!")
+        Tipografia.subtitulo(183, 170, f"Estrelas capturadas: {self.total_estrelas}")
+        Tipografia.subtitulo(183, 180, f"Tentativas restantes: {self.tentativas_restantes}")
 
 
 class Estrela:
@@ -233,7 +232,8 @@ class Plano:
 
     def desenhar(self):
         pyxel.rect(0, 0, 100, 300, 3)
-        pyxel.line(100, 0, 100, 300, 1)
+        pyxel.line(100, 0, 100, 300, 7)
+        pyxel.line(100, 40, 400, 40, 7)
         #Linhas verticais que cortam o plano
         for x in range(-7, 8):
             tela_x = 250 + x * 20
