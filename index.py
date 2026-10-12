@@ -27,7 +27,7 @@ class Tipografia:
 
 class TelaInicial:
     def __init__(self):
-        self.titulo_completo = "BEM VINDO AO GEO-STAR"
+        self.titulo_completo = "BEM VINDO AO GEOSTAR"
         self.titulo_atual = ""
         self.som_tocado = False
         
@@ -567,7 +567,7 @@ class Jogo:
         for estrela in self.estrelas:
             estrela.desenhar()
 
-        pyxel.text(34, 20, 'GEO-STAR', 7)
+        pyxel.text(34, 20, 'GEOSTAR', 7)
         pyxel.text(221, 20, 'PLANO CARTESIANO', 7)
         pyxel.text(13, 40, 'Desafio das Retas', 7)
         
@@ -575,11 +575,13 @@ class Jogo:
         Tipografia.aviso(10, 150, f"Tentativas: {self.tentativas_restantes}", alerta_tentativas)
         
         Tipografia.subtitulo(10, 70, "Valor de 'A':")
-        cor_borda_a = 11 if self.foco_input == "a" else 5  
+        cor_borda_a = 7 if self.foco_input == "a" else 5
+        pyxel.rect(8, 81, 70, 20, 0)  
         pyxel.rectb(8, 81, 70, 20, cor_borda_a)
         
         Tipografia.subtitulo(10, 110, "Valor de 'B':")
-        cor_borda_b = 11 if self.foco_input == "b" else 5  
+        cor_borda_b = 7 if self.foco_input == "b" else 5  
+        pyxel.rect(8, 120, 70, 20, 0)
         pyxel.rectb(8, 120, 70, 20, cor_borda_b)
         
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
