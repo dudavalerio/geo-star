@@ -44,9 +44,9 @@ class TelaInicial:
 
 O jogo tem como objetivo capturar estrelas no plano atraves da equacao da reta y= ax+b.
 
-Para iniciar o jogo digite um valor para “a“ (coeficiente angular) e um valor para “b“ ( coeficiente 
+Para iniciar o jogo digite um valor para “A“ (coeficiente angular) e um valor para “B“ (coeficiente 
 
-linear ) afim de coletar uma das estrelas no plano, com base nesses valores a reta será projeta 
+linear) afim de coletar uma das estrelas no plano, com base nesses valores a reta sera projetada 
 
 sobre o plano para realizar a coleta."""
 
@@ -96,21 +96,26 @@ sobre o plano para realizar a coleta."""
             
 
 class ModalColeta:
-    def __init__(self, estrela):
-        self.estrela = estrela
+    def __init__(self, estrelas):
+        self.estrelas = estrelas
 
     def desenhar(self):
         for y in range(0, 300, 2):
             for x in range(0, 400, 2):
                 pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
+                
+        altura_rect = 10
+        for estrela in self.estrelas:
+            altura_rect=altura_rect+20
+            
+        pyxel.rect(180, 160, 134, altura_rect, 0)
+        pyxel.rectb(180, 160, 134, altura_rect, 10)
+        y = 170
+        for estrela in self.estrelas:
+            Tipografia.subtitulo(190, y, f"Estrela em ({estrela.x}, {estrela.y}) capturada!")
+            y = y + 10
         
-        pyxel.rect(104, 114, 200, 50, 0)
-        pyxel.rect(100, 110, 200, 50, 11)
-        pyxel.rectb(100, 110, 200, 50, 7)
-        
-        Tipografia.subtitulo(110, 122, f"Estrela em ({self.estrela.x}, {self.estrela.y}) capturada!")
-
 
 class ModalFimJogo:
     def desenhar(self):
@@ -119,12 +124,11 @@ class ModalFimJogo:
                 pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
                 
-        pyxel.rect(134, 124, 140, 40, 0)
-        pyxel.rect(130, 120, 140, 40, 0)
-        pyxel.rectb(130, 120, 140, 40, 8)
+        pyxel.rect(180, 154, 140, 40, 0)
+        pyxel.rectb(180, 154, 140, 40, 8)
 
-        Tipografia.titulo(155, 132, "      FIM DE JOGO!")
-        Tipografia.subtitulo(142, 144, "   Acabaram as tentativas")
+        Tipografia.titulo(228, 165, "FIM DE JOGO!")
+        Tipografia.subtitulo(210, 175, "Acabaram as tentativas")
 
 
 class ModalVitoria:
@@ -138,14 +142,13 @@ class ModalVitoria:
                 pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
                 
-        pyxel.rect(104, 114, 200, 60, 0)
-        pyxel.rect(100, 110, 200, 60, 0)
-        pyxel.recb(100, 110, 200, 60, 11)
+        pyxel.rect(180, 140, 140, 60, 0)
+        pyxel.rectb(180, 140, 140, 60, 11)
 
-        Tipografia.titulo(110, 118, "VOCÊ VENCEU!")
-        Tipografia.subtitulo(110, 130, "Todas as estrelas foram coletadas!")
-        Tipografia.subtitulo(110, 145, f"Estrelas capturadas: {self.total_estrelas}")
-        Tipografia.subtitulo(110, 155, f"Tentativas restantes: {self.tentativas_restantes}")
+        Tipografia.titulo(228, 150, "VOCE VENCEU!")
+        Tipografia.subtitulo(183, 160, "Todas as estrelas foram coletadas!")
+        Tipografia.subtitulo(183, 170, f"Estrelas capturadas: {self.total_estrelas}")
+        Tipografia.subtitulo(183, 180, f"Tentativas restantes: {self.tentativas_restantes}")
 
 
 class Estrela:
@@ -205,21 +208,54 @@ class Reta:
             if self.pass_por(estrela):
                 estrela.coletada = True
 
+    # def desenhar(self):
+    #     anterior_x = None
+    #     anterior_y = None
+
+    #     for x in range(-10, 11):
+    #         y = self.calcular_y(x)
+
+    #         tela_x = 250 + (x) * 20
+    #         tela_y = 170 - (y) * 20
+
+    #         if anterior_x is not None:
+    #             pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
+
+    #         anterior_x = tela_x
+    #         anterior_y = tela_y
+    
+    
     def desenhar(self):
-        anterior_x = None
-        anterior_y = None
+        #limites do plano cartesiano
+        x_min = 100
+        x_max = 399
+        y_min = 40
+        y_max = 299
 
-        for x in range(-10, 11):
-            y = self.calcular_y(x)
+        pontos = []
 
-            tela_x = 250 + (x) * 20
-            tela_y = 170 - (y) * 20
+        # Interseções com as bordas verticais
+        for x in (x_min, x_max):
+            y = 170 - self.a * (x - 250) - 20 * self.b
 
-            if anterior_x is not None:
-                pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
+            if y_min <= y <= y_max:
+                pontos.append((x, y))
 
-            anterior_x = tela_x
-            anterior_y = tela_y
+        # Interseções com as bordas horizontais
+        if self.a != 0:
+            for y in (y_min, y_max):
+                x = 250 + (170 - y - 20 * self.b) / self.a
+
+                if x_min <= x <= x_max:
+                    pontos.append((x, y))
+
+        # Desenha a reta entre os dois pontos encontrados
+        if len(pontos) >= 2:
+            p1, p2 = pontos[:2]
+            pyxel.line(round(p1[0]), round(p1[1]),
+                    round(p2[0]), round(p2[1]), 8)
+
+
 
 
 class Plano:
@@ -227,10 +263,7 @@ class Plano:
         pyxel.mouse(True)
 
     def desenhar(self):
-        #Reserva uma área a esquerda para os controles
         pyxel.rect(0, 0, 100, 300, 3)
-        #Linha que separa os controles do plano
-        pyxel.line(100, 0, 100, 300, 1)
         #Linhas verticais que cortam o plano
         for x in range(-7, 8):
             tela_x = 250 + x * 20
@@ -246,6 +279,10 @@ class Plano:
         pyxel.line(100, 170, 400, 170, 7)
         pyxel.line(250, 40, 250, 300, 7)
             
+        #delimitam o plano cartesiano
+        pyxel.line(100, 0, 100, 300, 7)
+        pyxel.line(100, 40, 400, 40, 7)
+        
         for x in range(-7, 8):
             if x != 0:
                 tela_x = 250 + x * 20
@@ -447,7 +484,7 @@ class Jogo:
 
         
         # Troca de input usando as setas do teclado
-        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_DOWN):
+        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_DOWN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
             if self.foco_input == "a":
                 self.foco_input = "b"
             else:
@@ -494,6 +531,7 @@ class Jogo:
 
     def verificar_todas_colisoes(self):
         colidiu_agora = False
+        estrelas = []
         for estrela in self.estrelas:
             if not estrela.coletada:
                 numerador = abs(self.reta1.a * estrela.x - estrela.y + self.reta1.b)
@@ -502,12 +540,16 @@ class Jogo:
                 
                 if distancia <= 0.3:
                     estrela.coletada = True
-                    self.modal = ModalColeta(estrela)
-                    self.mostrar_modal = True
-                    self.modal_timer = 120  
+                    estrelas.append(estrela)
+                    print(estrela)  
                     colidiu_agora = True
                     pyxel.play(0, 2)  
                     print(f"⭐ Estrela na coordenada ({estrela.x}, {estrela.y}) capturada!")
+                
+        if colidiu_agora: # Mostra na tela as estrelas coletadas
+            self.modal = ModalColeta(estrelas)
+            self.mostrar_modal = True
+            self.modal_timer = 120 
                     
         return colidiu_agora
 
@@ -524,24 +566,26 @@ class Jogo:
         
         for estrela in self.estrelas:
             estrela.desenhar()
-            
-        Tipografia.titulo(239, 10, 'GeoStar')
+
+        pyxel.text(34, 20, 'GEO-STAR', 7)
+        pyxel.text(221, 20, 'PLANO CARTESIANO', 7)
+        pyxel.text(13, 40, 'Desafio das Retas', 7)
         
         alerta_tentativas = self.tentativas_restantes <= 2
-        Tipografia.aviso(10, 95, f"Tentativas Restantes: {self.tentativas_restantes}", alerta_tentativas)
+        Tipografia.aviso(10, 150, f"Tentativas: {self.tentativas_restantes}", alerta_tentativas)
         
-        Tipografia.subtitulo(10, 10, "Valor de 'a' (inclinação):")
+        Tipografia.subtitulo(10, 70, "Valor de 'A':")
         cor_borda_a = 11 if self.foco_input == "a" else 5  
-        pyxel.rectb(8, 111, 70, 20, cor_borda_a)
+        pyxel.rectb(8, 81, 70, 20, cor_borda_a)
         
-        Tipografia.subtitulo(10, 52, "Valor de 'b' (interseção Y):")
+        Tipografia.subtitulo(10, 110, "Valor de 'B':")
         cor_borda_b = 11 if self.foco_input == "b" else 5  
-        pyxel.rectb(8, 150, 70, 20, cor_borda_b)
+        pyxel.rectb(8, 120, 70, 20, cor_borda_b)
         
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
         
-        Tipografia.subtitulo(14, 29, self.texto_1 + (cursor if self.foco_input == "a" else ""))
-        Tipografia.subtitulo(14, 69, self.texto_2 + (cursor if self.foco_input == "b" else ""))
+        Tipografia.subtitulo(14, 89, self.texto_1 + (cursor if self.foco_input == "a" else ""))
+        Tipografia.subtitulo(14, 129, self.texto_2 + (cursor if self.foco_input == "b" else ""))
         
         pyxel.mouse(True)
         
@@ -555,3 +599,4 @@ class Jogo:
             self.modal_vitoria.desenhar()
          
 Jogo()
+
