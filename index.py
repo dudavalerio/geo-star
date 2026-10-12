@@ -109,7 +109,8 @@ class ModalColeta:
         for estrela in self.estrelas:
             altura_rect=altura_rect+20
             
-        pyxel.rect(180, 160, 134, altura_rect, 11)
+        pyxel.rect(180, 160, 134, altura_rect, 0)
+        pyxel.rectb(180, 160, 134, altura_rect, 10)
         y = 170
         for estrela in self.estrelas:
             Tipografia.subtitulo(190, y, f"Estrela em ({estrela.x}, {estrela.y}) capturada!")
@@ -123,7 +124,6 @@ class ModalFimJogo:
                 pyxel.pset(x, y, 0)
                 pyxel.pset(x + 1, y + 1, 0)
                 
-        pyxel.rect(180, 154, 140, 40, 0)
         pyxel.rect(180, 154, 140, 40, 0)
         pyxel.rectb(180, 154, 140, 40, 8)
 
@@ -143,10 +143,9 @@ class ModalVitoria:
                 pyxel.pset(x + 1, y + 1, 0)
                 
         pyxel.rect(180, 140, 140, 60, 0)
-        pyxel.rect(180, 140, 140, 60, 0)
-        pyxel.rect(180, 140, 140, 60, 11)
+        pyxel.rectb(180, 140, 140, 60, 11)
 
-        Tipografia.titulo(183, 150, "VOCE VENCEU!")
+        Tipografia.titulo(228, 150, "VOCE VENCEU!")
         Tipografia.subtitulo(183, 160, "Todas as estrelas foram coletadas!")
         Tipografia.subtitulo(183, 170, f"Estrelas capturadas: {self.total_estrelas}")
         Tipografia.subtitulo(183, 180, f"Tentativas restantes: {self.tentativas_restantes}")
