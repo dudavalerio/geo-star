@@ -1,4 +1,4 @@
-# GEO-STAR
+# GEOSTAR
 
 
 Descrição do Jogo
