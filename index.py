@@ -44,9 +44,9 @@ class TelaInicial:
 
 O jogo tem como objetivo capturar estrelas no plano atraves da equacao da reta y= ax+b.
 
-Para iniciar o jogo digite um valor para “a“ (coeficiente angular) e um valor para “b“ (coeficiente 
+Para iniciar o jogo digite um valor para “A“ (coeficiente angular) e um valor para “B“ (coeficiente 
 
-linear) afim de coletar uma das estrelas no plano, com base nesses valores a reta será projeta 
+linear) afim de coletar uma das estrelas no plano, com base nesses valores a reta sera projetada 
 
 sobre o plano para realizar a coleta."""
 
@@ -209,21 +209,54 @@ class Reta:
             if self.pass_por(estrela):
                 estrela.coletada = True
 
+    # def desenhar(self):
+    #     anterior_x = None
+    #     anterior_y = None
+
+    #     for x in range(-10, 11):
+    #         y = self.calcular_y(x)
+
+    #         tela_x = 250 + (x) * 20
+    #         tela_y = 170 - (y) * 20
+
+    #         if anterior_x is not None:
+    #             pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
+
+    #         anterior_x = tela_x
+    #         anterior_y = tela_y
+    
+    
     def desenhar(self):
-        anterior_x = None
-        anterior_y = None
+        #limites do plano cartesiano
+        x_min = 100
+        x_max = 399
+        y_min = 40
+        y_max = 299
 
-        for x in range(-10, 11):
-            y = self.calcular_y(x)
+        pontos = []
 
-            tela_x = 250 + (x) * 20
-            tela_y = 170 - (y) * 20
+        # Interseções com as bordas verticais
+        for x in (x_min, x_max):
+            y = 170 - self.a * (x - 250) - 20 * self.b
 
-            if anterior_x is not None:
-                pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
+            if y_min <= y <= y_max:
+                pontos.append((x, y))
 
-            anterior_x = tela_x
-            anterior_y = tela_y
+        # Interseções com as bordas horizontais
+        if self.a != 0:
+            for y in (y_min, y_max):
+                x = 250 + (170 - y - 20 * self.b) / self.a
+
+                if x_min <= x <= x_max:
+                    pontos.append((x, y))
+
+        # Desenha a reta entre os dois pontos encontrados
+        if len(pontos) >= 2:
+            p1, p2 = pontos[:2]
+            pyxel.line(round(p1[0]), round(p1[1]),
+                    round(p2[0]), round(p2[1]), 8)
+
+
 
 
 class Plano:
@@ -232,8 +265,6 @@ class Plano:
 
     def desenhar(self):
         pyxel.rect(0, 0, 100, 300, 3)
-        pyxel.line(100, 0, 100, 300, 7)
-        pyxel.line(100, 40, 400, 40, 7)
         #Linhas verticais que cortam o plano
         for x in range(-7, 8):
             tela_x = 250 + x * 20
@@ -249,6 +280,10 @@ class Plano:
         pyxel.line(100, 170, 400, 170, 7)
         pyxel.line(250, 40, 250, 300, 7)
             
+        #delimitam o plano cartesiano
+        pyxel.line(100, 0, 100, 300, 7)
+        pyxel.line(100, 40, 400, 40, 7)
+        
         for x in range(-7, 8):
             if x != 0:
                 tela_x = 250 + x * 20
@@ -450,7 +485,7 @@ class Jogo:
 
         
         # Troca de input usando as setas do teclado
-        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_DOWN):
+        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.KEY_DOWN) or pyxel.btnp(pyxel.KEY_KP_ENTER):
             if self.foco_input == "a":
                 self.foco_input = "b"
             else:
@@ -533,7 +568,7 @@ class Jogo:
         for estrela in self.estrelas:
             estrela.desenhar()
 
-        pyxel.text(34, 20, 'GEOSTAR', 7)
+        pyxel.text(34, 20, 'GEO-STAR', 7)
         pyxel.text(221, 20, 'PLANO CARTESIANO', 7)
         pyxel.text(13, 40, 'Desafio das Retas', 7)
         
@@ -546,7 +581,7 @@ class Jogo:
         
         Tipografia.subtitulo(10, 110, "Valor de 'B':")
         cor_borda_b = 11 if self.foco_input == "b" else 5  
-        pyxel.rectb(8, 120, 70, 20, cor_borda_a)
+        pyxel.rectb(8, 120, 70, 20, cor_borda_b)
         
         cursor = "_" if pyxel.frame_count % 30 < 15 else ""
         
