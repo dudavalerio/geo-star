@@ -26,6 +26,8 @@ class Tipografia:
 
 
 class TelaInicial:
+    """Controla a tela inicial, as instruções e a transição para o jogo."""
+
     def __init__(self):
         self.titulo_completo = "BEM VINDO AO GEOSTAR"
         self.titulo_atual = ""
@@ -68,8 +70,9 @@ sobre o plano para realizar a coleta."""
         return "TELA_INICIAL"
 
     def draw(self):
+        """Desenha a tela inicial do Geo-Star."""
+
         pyxel.cls(0)
-        
         
         # Desenha o céu estrelado de fundo (apenas pequenas)
         for est in self.estrelas_fundo:
@@ -96,7 +99,11 @@ sobre o plano para realizar a coleta."""
             
 
 class ModalColeta:
+    """Exibe uma mensagem com as estrelas capturadas em uma jogada."""
+
     def __init__(self, estrelas):
+        """Guarda a lista de estrelas capturadas para exibi-las."""
+
         self.estrelas = estrelas
 
     def desenhar(self):
@@ -118,6 +125,8 @@ class ModalColeta:
         
 
 class ModalFimJogo:
+    """Desenha a mensagem exibida quando as tentativas acabam."""
+
     def desenhar(self):
         for y in range(0, 300, 2):
             for x in range(0, 400, 2):
@@ -132,6 +141,8 @@ class ModalFimJogo:
 
 
 class ModalVitoria:
+    """Desenha a mensagem de vitória e apresenta o resultado da partida."""
+
     def __init__(self, total_estrelas, tentativas_restantes):
         self.total_estrelas = total_estrelas
         self.tentativas_restantes = tentativas_restantes
@@ -152,6 +163,8 @@ class ModalVitoria:
 
 
 class Estrela:
+    """Representa uma estrela que pode ser capturada no plano cartesiano."""
+
     def __init__(self, x, y, largura, altura, cor, sprite_x, sprite_y):
         self.x = x
         self.y = y
@@ -186,12 +199,16 @@ class Estrela:
             pyxel.circ(tela_x, tela_y, 4, 7)
 
     def converter_coordenada(self):
+        """Converte a posição cartesiana da estrela para pixels da tela."""
+
         tela_x = 250 + self.x * 20
         tela_y = 170 - self.y * 20
         return tela_x, tela_y
 
 
 class Reta:
+    """Representa a reta da equação y = ax + b e permite desenhá-la no plano."""
+
     def __init__(self, a, b):
         self.a = a
         self.b = b
@@ -200,32 +217,22 @@ class Reta:
         return self.a * x + self.b
     
     def passa_por(self, estrela):
+        """Verifica se a estrela está exatamente sobre a reta."""
+
         y_calculado = self.calcular_y(estrela.x)
         return y_calculado == estrela.y
+    
     #Verificar tds as estrelas quando encontrar ele coleta.
     def coletar_estrelas(self, estrelas):
+        """Marca como capturadas as estrelas que pertencem à reta."""
+
         for estrela in estrelas:
             if self.pass_por(estrela):
                 estrela.coletada = True
-
-    # def desenhar(self):
-    #     anterior_x = None
-    #     anterior_y = None
-
-    #     for x in range(-10, 11):
-    #         y = self.calcular_y(x)
-
-    #         tela_x = 250 + (x) * 20
-    #         tela_y = 170 - (y) * 20
-
-    #         if anterior_x is not None:
-    #             pyxel.line(anterior_x, anterior_y, tela_x, tela_y, 8)
-
-    #         anterior_x = tela_x
-    #         anterior_y = tela_y
-    
     
     def desenhar(self):
+        """Calcula as interseções com os limites e desenha a reta no plano."""
+
         #limites do plano cartesiano
         x_min = 100
         x_max = 399
@@ -255,10 +262,9 @@ class Reta:
             pyxel.line(round(p1[0]), round(p1[1]),
                     round(p2[0]), round(p2[1]), 8)
 
-
-
-
 class Plano:
+    """Desenha o plano cartesiano, a grade, os eixos e as coordenadas do mouse."""
+
     def __init__(self):
         pyxel.mouse(True)
 
@@ -311,7 +317,11 @@ class Plano:
 
 
 class Jogo:
+    """Gerencia o estado da partida, as entradas do jogador e as regras do jogo."""
+
     def __init__(self):
+        """Configura a janela, os sons e os dados iniciais da partida."""
+
         pyxel.init(400, 300, title="GeoStar - Desafio das Retas")
 
         self.estado = "TELA_INICIAL"
@@ -408,6 +418,8 @@ class Jogo:
             self.estrelas.append(estrela)
             posicoes.append((x, y))
     def converter_numero(self, texto):
+        """Converte um texto em número, aceitando também frações como 1/2."""
+
         texto = texto.strip()
 
         if "/" in texto:
@@ -427,6 +439,8 @@ class Jogo:
         return float(texto)
     
     def update(self):
+        """Atualiza entradas, tentativas e capturas da partida."""
+
         if self.estado == "TELA_INICIAL":
             proximo_estado = self.tela_inicial.update()
             if proximo_estado == "JOGANDO":
@@ -530,6 +544,8 @@ class Jogo:
                 self.foco_input = "b"
 
     def verificar_todas_colisoes(self):
+        """Verifica quais estrelas colidiram com a reta e as captura."""
+
         colidiu_agora = False
         estrelas = []
         for estrela in self.estrelas:
@@ -554,6 +570,8 @@ class Jogo:
         return colidiu_agora
 
     def draw(self):
+        """Desenha a tela/modal adequada ao estado atual do jogo."""
+
         pyxel.cls(0)
         
         if self.estado == "TELA_INICIAL":
